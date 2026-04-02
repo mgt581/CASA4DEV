@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casa4 Developments | Indoor & Outdoor Living</title>
+  <meta name="description" content="Casa4 Developments - family-run home improvement specialists in Fareham, Hampshire. Driveways, patios, landscaping and outdoor living spaces." />
+
+  <style>
+    :root {
+      --bg: #5d626a;
+      --bg-dark: #474c53;
+      --panel: #616771;
+      --text: #ffffff;
+      --muted: #e5e5e5;
+      --accent: #73d86c;
+      --button: #f5f2ea;
+      --button-text: #333;
+      --max: 1200px;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(100% - 32px, var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      background: var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.2rem;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .nav a {
+      padding: 8px 10px;
+    }
+
+    .call-box {
+      background: #fff;
+      color: #444;
+      font-weight: 700;
+      text-align: center;
+      padding: 12px 16px;
+      min-width: 170px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      padding: 28px 0 18px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #444;
+    }
+
+    .hero-image {
+      width: 100%;
+      min-height: 520px;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      left: 40px;
+      top: 40px;
+      max-width: 360px;
+    }
+
+    .finance-badge {
+      background: rgba(255,255,255,0.95);
+      color: #222;
+      border-radius: 20px;
+      padding: 18px 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      margin-bottom: 18px;
+    }
+
+    .finance-badge strong {
+      display: block;
+      font-size: 2rem;
+      line-height: 1;
+      color: #2da39b;
+      margin: 6px 0;
+    }
+
+    .finance-badge .small {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 260px;
+    }
+
+    .btn {
+      display: inline-block;
+      text-align: center;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.96;
+    }
+
+    .btn-whatsapp {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-quote {
+      background: rgba(255,255,255,0.3);
+      color: #fff;
+      backdrop-filter: blur(4px);
+    }
+
+    .trust {
+      padding: 28px 0 10px;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .trust-box {
+      text-align: center;
+    }
+
+    .trust-box h3 {
+      margin-top: 10px;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    .section {
+      padding: 50px 0;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      max-width: 860px;
+      text-align: center;
+      margin: 0 auto 36px;
+      font-size: 1.25rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      display: inline-block;
+      position: relative;
+    }
+
+    .eyebrow::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.7);
+      margin-top: 14px;
+    }
+
+    .about-copy h2 {
+      font-size: clamp(2rem, 3.6vw, 3.6rem);
+      line-height: 1.05;
+      margin-bottom: 20px;
+      font-weight: 900;
+    }
+
+    .about-copy p {
+      font-size: 1.15rem;
+      max-width: 680px;
+    }
+
+    .about-image img {
+      border-radius: 0;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .services {
+      padding-top: 36px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 24px;
+    }
+
+    .service-card {
+      background: rgba(255,255,255,0.08);
+      padding: 34px 28px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .service-card .dash {
+      width: 54px;
+      height: 4px;
+      background: rgba(255,255,255,0.85);
+      margin-bottom: 24px;
+    }
+
+    .service-card h3 {
+      font-size: 2rem;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+
+    .service-card p {
+      font-size: 1.15rem;
+      line-height: 1.4;
+      margin-bottom: 30px;
+    }
+
+    .btn-light {
+      background: var(--button);
+      color: var(--button-text);
+      padding: 16px 24px;
+      display: inline-block;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      width: fit-content;
+    }
+
+    .footer {
+      background: var(--bg-dark);
+      padding: 30px 0;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer p {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 980px) {
+      .nav-wrap {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nav {
+        justify-content: center;
+      }
+
+      .call-box {
+        align-self: center;
+      }
+
+      .about-grid,
+      .services-grid,
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-image {
+        min-height: 420px;
+      }
+
+      .hero-overlay {
+        left: 20px;
+        right: 20px;
+        top: 20px;
+        max-width: 320px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 20px, var(--max));
+      }
+
+      .nav {
+        gap: 8px 10px;
+        font-size: 0.9rem;
+      }
+
+      .hero-image {
+        min-height: 360px;
+      }
+
+      .hero-overlay {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        top: 14px;
+        max-width: 240px;
+      }
+
+      .finance-badge {
+        padding: 14px 16px;
+        border-radius: 16px;
+      }
+
+      .finance-badge strong {
+        font-size: 1.5rem;
+      }
+
+      .btn {
+        padding: 14px 18px;
+        font-size: 1rem;
+      }
+
+      .about-copy p,
+      .service-card p,
+      .section-subtitle {
+        font-size: 1rem;
+      }
+
+      .service-card {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#" class="logo">
+        CASA4 DEVELOPMENTS
+        <span>INDOOR &amp; OUTDOOR LIVING</span>
+      </a>
+
+      <nav class="nav">
+        <a href="#">HOME</a>
+        <a href="#services">SERVICES</a>
+        <a href="#">INDOOR</a>
+        <a href="#">PORCELAIN</a>
+        <a href="#">OUTDOOR</a>
+        <a href="#">GALLERY</a>
+        <a href="#">OFFERS</a>
+        <a href="#">CONTACT</a>
+      </nav>
+
+      <div class="call-box">
+        CALL: 01489 290012 /<br />
+        07900281011
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <img
+            class="hero-image"
+            src="images/hero.jpg"
+            alt="Casa4 Developments outdoor living project"
+          />
+
+          <div class="hero-overlay">
+            <div class="finance-badge">
+              <div>NOW OFFERING</div>
+              <strong>0% FINANCE</strong>
+              <div>UPGRADE TODAY!</div>
+              <div class="small">(Bournemouth, Poole, Dorset &amp; Hampshire)</div>
+            </div>
+
+            <div class="hero-actions">
+              <a href="https://wa.me/447900281011" class="btn btn-whatsapp">WhatsApp</a>
+              <a href="contact.html" class="btn btn-quote">Get a Free Quote</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust">
+      <div class="container trust-grid">
+        <div class="trust-box">
+          <img src="images/checkatrade.png" alt="Checkatrade logo" />
+          <h3>Proud members of Checkatrade</h3>
+        </div>
+        <div class="trust-box">
+          <img src="images/trustatrader.png" alt="TrustATrader logo" />
+          <h3>Proud members of TrustATrader</h3>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about">
+      <div class="container about-grid">
+        <div class="about-copy">
+          <div class="eyebrow">About Casa4 Developments</div>
+          <h2>We help you create the home you really want.</h2>
+          <p>
+            Casa4 Developments is a family run business based in Fareham, Hampshire,
+            with over 25 years experience in the design and installation of quality
+            home improvements. Such as driveways, stylish patios, brickwork, kitchens,
+            bathrooms, outdoor living areas and all aspects of associated landscaping.
+          </p>
+        </div>
+
+        <div class="about-image">
+          <img src="images/about-garden.jpg" alt="Garden transformation project by Casa4 Developments" />
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="section services">
+      <div class="container">
+        <h2 class="section-title">What We Do</h2>
+        <p class="section-subtitle">
+          Casa4 Developments is a family run business based in Fareham, Hampshire,
+          with over 25 years experience in the design and installation of quality
+          driveways, stylish patios, brickwork and all aspects of associated landscaping.
+        </p>
+
+        <div class="services-grid">
+          <article class="service-card">
+            <div>
+              <div class="dash"></div>
+              <h3>Block Paving.</h3>
+              <p>
+                We specialise in block paving and exceed expectations. We design
+                and install block paving to complement your property.
+              </p>
+            </div>
+            <a class="btn-light" href="block-paving.html">Find Out More</a>
+          </article>
+
+          <article class="service-card">
+            <div>
+              <div class="dash"></div>
+              <h3>Landscaping.</h3>
+              <p>
+                We offer a full landscaping service and with over 25 years
+                experience, we can help you achieve your goals.
+              </p>
+            </div>
+            <a class="btn-light" href="landscaping.html">Find Out More</a>
+          </article>
+
+          <article class="service-card">
+            <div>
+              <div class="dash"></div>
+              <h3>Patios.</h3>
+              <p>
+                We understand how important space is and finding the right patio
+                to complement your garden is essential.
+              </p>
+            </div>
+            <a class="btn-light" href="patios.html">Find Out More</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© Casa4 Developments</p>
+      <p>Fareham, Hampshire | Indoor &amp; Outdoor Living</p>
+    </div>
+  </footer>
+
+</body>
+</html>
