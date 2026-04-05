@@ -32,7 +32,7 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
+      background: var(--bg-dark);
       color: var(--text);
       line-height: 1.5;
     }
@@ -97,18 +97,19 @@
     }
 
     .call-box {
-      background: #fff;
-      color: #444;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
       font-weight: 700;
       text-align: center;
       padding: 12px 16px;
       min-width: 170px;
       border-radius: 6px;
       font-size: 0.95rem;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .hero {
-      padding: 28px 0 18px;
+      padding: 28px 0 28px;
     }
 
     .hero-card {
@@ -116,6 +117,8 @@
       overflow: hidden;
       border-radius: 10px;
       background: #444;
+      max-width: calc(var(--max) - 48px);
+      margin: 0 auto;
     }
 
     .hero-image {
