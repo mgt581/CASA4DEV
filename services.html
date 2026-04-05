@@ -205,15 +205,38 @@
       border-top: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* RESPONSIVE */
+    .contact-cta {
+      text-align: center;
+      padding: 20px 0 40px;
+    }
+
+    .contact-cta h2 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .contact-cta p {
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-size: 1.05rem;
+    }
+
+    .btn-cta-whatsapp {
+      background: #73d86c;
+      margin-right: 16px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
     @media (max-width: 980px) {
       .nav-wrap { flex-direction: column; }
       .services-grid { grid-template-columns: 1fr; }
       .page-hero h1 { font-size: 2rem; }
-    }
-
-    @media (max-width: 620px) {
-      .services-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -331,10 +354,10 @@
           </div>
         </div>
 
-        <div style="text-align: center; padding: 20px 0 40px;" id="contact">
-          <h2 style="font-size: 2rem; margin-bottom: 16px;">Ready to Get Started?</h2>
-          <p style="color: var(--muted); margin-bottom: 28px; font-size: 1.05rem;">Contact us today for a free, no-obligation quote.</p>
-          <a href="https://wa.me/447900281011" class="btn-cta" style="margin-right: 16px; background: #73d86c;">WhatsApp Us</a>
+        <div class="contact-cta" id="contact">
+          <h2>Ready to Get Started?</h2>
+          <p>Contact us today for a free, no-obligation quote.</p>
+          <a href="https://wa.me/447900281011" class="btn-cta btn-cta-whatsapp">WhatsApp Us</a>
           <a href="tel:01489290012" class="btn-cta">Call 01489 290012</a>
         </div>
       </div>
@@ -342,7 +365,7 @@
   </main>
 
   <footer class="footer">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div class="container footer-inner">
       <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" />
       <p>© Casa4 Developments</p>
       <p>Fareham, Hampshire | Indoor &amp; Outdoor Living</p>
