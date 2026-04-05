@@ -130,7 +130,7 @@
     .hero-overlay {
       position: absolute;
       left: 40px;
-      top: 40px;
+      bottom: 40px;
       max-width: 360px;
     }
 
@@ -140,10 +140,7 @@
       border-radius: 20px;
       padding: 18px 22px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      
-      /* --- THIS IS THE CRUCIAL CHANGE --- */
-      margin-bottom: 50px; /* INCREASED THIS to move the buttons DOWN */
-      /* ---------------------------------- */
+      margin-bottom: 16px;
     }
 
     .finance-badge strong {
@@ -213,7 +210,7 @@
       .nav-wrap { flex-direction: column; }
       .trust-grid { grid-template-columns: 1fr; }
       .hero-image { min-height: 400px; }
-      .hero-overlay { left: 20px; top: 20px; }
+      .hero-overlay { left: 20px; bottom: 20px; }
     }
   </style>
 </head>
