@@ -8,7 +8,7 @@
 
   <style>
     :root {
-      /* All backgrounds now match the footer color */
+      /* Matching all backgrounds to the dark footer color */
       --bg-dark: #474c53; 
       --panel: #616771;
       --text: #ffffff;
@@ -32,7 +32,7 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg-dark); /* Changed to Navy Grey */
+      background: var(--bg-dark); /* Navy Grey */
       color: var(--text);
       line-height: 1.5;
     }
@@ -52,7 +52,7 @@
       margin: 0 auto;
     }
 
-    /* HEADER - RESTORED TO YOUR ORIGINAL LAYOUT */
+    /* HEADER */
     .site-header {
       background: var(--bg-dark);
       position: sticky;
@@ -108,9 +108,9 @@
       font-size: 0.95rem;
     }
 
-    /* HERO SECTION - FIXED MARGINS */
+    /* HERO SECTION */
     .hero {
-      padding: 28px 0 40px; /* Space above and below the hero */
+      padding: 28px 0 40px; /* Space around the hero */
     }
 
     .hero-card {
@@ -140,7 +140,10 @@
       border-radius: 20px;
       padding: 18px 22px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      margin-bottom: 18px;
+      
+      /* --- THIS IS THE CRUCIAL CHANGE --- */
+      margin-bottom: 50px; /* INCREASED THIS to move the buttons DOWN */
+      /* ---------------------------------- */
     }
 
     .finance-badge strong {
@@ -172,7 +175,7 @@
     .btn-whatsapp { background: var(--accent); color: #fff; }
     .btn-quote { background: rgba(255,255,255,0.3); color: #fff; backdrop-filter: blur(4px); }
 
-    /* SECTIONS - ALL NAVY GREY */
+    /* SECTIONS */
     .section {
       padding: 60px 0;
       background: var(--bg-dark);
