@@ -94,7 +94,16 @@
     }
 
     .nav a {
-      padding: 8px 10px;
+      padding: 8px 18px;
+      background: #fff;
+      color: #333;
+      border-radius: 50px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav a:hover {
+      background: var(--accent);
+      color: #fff;
     }
 
     .call-box {
@@ -173,7 +182,7 @@
     }
 
     .btn-whatsapp { background: var(--accent); color: #fff; }
-    .btn-quote { background: rgba(255,255,255,0.3); color: #fff; backdrop-filter: blur(4px); }
+    .btn-quote { background: #fff; color: #333; }
 
     /* SECTIONS */
     .section {
