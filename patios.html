@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patios | Casa4 Developments</title>
+  <meta name="description" content="Stunning porcelain and natural stone patio installations by Casa4 Developments. Create the perfect outdoor living area in Fareham, Hampshire." />
+
+  <style>
+    :root {
+      --bg-dark: #474c53;
+      --panel: #616771;
+      --text: #ffffff;
+      --muted: #e5e5e5;
+      --accent: #73d86c;
+      --max: 1200px;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(100% - 32px, var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      background: var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0;
+    }
+
+    .logo-img { height: 60px; width: auto; }
+    .footer-logo { height: 50px; width: auto; }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .nav a {
+      padding: 8px 18px;
+      background: #fff;
+      color: #333;
+      border-radius: 50px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav a:hover, .nav a.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .nav-dropdown { position: relative; }
+
+    .nav-dropdown-toggle {
+      display: inline-block;
+      padding: 8px 18px;
+      background: #fff;
+      color: #333;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-dropdown-toggle:hover,
+    .nav-dropdown-toggle.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      min-width: 190px;
+      z-index: 2000;
+      overflow: hidden;
+    }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 12px 18px;
+      color: #333;
+      background: transparent;
+      border-radius: 0;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-dropdown-menu a:hover,
+    .nav-dropdown-menu a.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      display: block;
+    }
+
+    .call-box {
+      background: #fff;
+      color: #444;
+      font-weight: 700;
+      text-align: center;
+      padding: 12px 16px;
+      min-width: 170px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .page-hero {
+      background: #3a3f45;
+      padding: 70px 0 60px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .page-hero h1 { font-size: 2.8rem; margin-bottom: 16px; }
+
+    .page-hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 32px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .content-section { padding: 70px 0; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .content-grid img {
+      border-radius: 14px;
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+    }
+
+    .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
+
+    .content-text p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 60px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .feature-card .icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+    .cta-banner {
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 50px 40px;
+      text-align: center;
+    }
+
+    .cta-banner h2 { font-size: 2rem; margin-bottom: 14px; }
+
+    .cta-banner p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 30px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      text-align: center;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn-whatsapp { background: var(--accent); color: #fff; }
+    .btn-whatsapp:hover { background: #5ec458; }
+    .btn-quote { background: #f97316; color: #fff; }
+    .btn-quote:hover { background: #ea6c0a; }
+    .btn-back { background: #fff; color: #333; }
+    .btn-back:hover { background: var(--accent); color: #fff; }
+
+    .footer {
+      background: var(--bg-dark);
+      padding: 40px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @media (max-width: 980px) {
+      .nav-wrap { flex-direction: column; }
+      .content-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .page-hero h1 { font-size: 2rem; }
+    }
+
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .cta-banner { padding: 36px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo">
+        <img src="images/logo.png" alt="Casa4 Developments" class="logo-img" />
+      </a>
+      <nav class="nav">
+        <a href="index.html">HOME</a>
+        <div class="nav-dropdown">
+          <a href="services.html" class="nav-dropdown-toggle active">SERVICES ▾</a>
+          <div class="nav-dropdown-menu">
+            <a href="pergolas.html">Pergolas</a>
+            <a href="outdoorkitchens.html">Outdoor Kitchens</a>
+            <a href="porcelain.html">Porcelain</a>
+            <a href="blockpaving.html">Block Paving</a>
+            <a href="patios.html" class="active">Patios</a>
+            <a href="landscaping.html">Landscaping</a>
+          </div>
+        </div>
+        <a href="index.html#gallery">GALLERY</a>
+        <a href="contact.html">CONTACT</a>
+      </nav>
+      <div class="call-box">
+        CALL: 01489 290012 /<br />
+        07900281011
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <h1>Patios</h1>
+        <p>Stunning porcelain and natural stone patio installations. Create the perfect outdoor living area with our expert patio design and installation service.</p>
+        <div class="hero-cta-group">
+          <a href="contact.html" class="btn btn-quote">Get a Free Quote</a>
+          <a href="https://wa.me/447900281011" class="btn btn-whatsapp">WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+
+    <section class="content-section">
+      <div class="container">
+
+        <div class="content-grid">
+          <img src="images/patio.png" alt="Patio installation by Casa4 Developments" />
+          <div class="content-text">
+            <h2>Your Perfect Outdoor Retreat</h2>
+            <p>A beautifully designed patio transforms your garden into an outdoor living space you'll want to use all year round. Whether you prefer the elegance of porcelain, the warmth of natural stone, or the classic look of block paving, we design and install patios that perfectly complement your home and garden.</p>
+            <p>From intimate seating areas to large entertaining spaces, our team works closely with you to bring your vision to life with precision and care.</p>
+            <a href="contact.html" class="btn btn-quote">Request a Quote</a>
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="icon">🌿</div>
+            <h3>Tailored to Your Garden</h3>
+            <p>Every patio we design is unique, shaped to your garden's layout and your personal style preferences.</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon">🪨</div>
+            <h3>Premium Materials</h3>
+            <p>We work with porcelain, natural stone, and more — sourcing only the best materials for lasting results.</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon">🔨</div>
+            <h3>Expert Installation</h3>
+            <p>Installed by skilled craftsmen to the highest standards, ensuring your patio looks great and stands the test of time.</p>
+          </div>
+        </div>
+
+        <div class="cta-banner">
+          <h2>Ready for a New Patio?</h2>
+          <p>Contact us today for a free, no-obligation quote. We cover Fareham, Hampshire and the wider South Coast area.</p>
+          <div class="cta-group">
+            <a href="contact.html" class="btn btn-quote">Get a Free Quote</a>
+            <a href="https://wa.me/447900281011" class="btn btn-whatsapp">💬 WhatsApp Us</a>
+            <a href="tel:01489290012" class="btn btn-back">📞 01489 290012</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" />
+      <p>© Casa4 Developments</p>
+      <p>Fareham, Hampshire | Indoor &amp; Outdoor Living</p>
+    </div>
+  </footer>
+
+</body>
+</html>
