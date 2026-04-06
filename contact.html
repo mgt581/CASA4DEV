@@ -77,6 +77,63 @@
       color: #fff;
     }
 
+    /* SERVICES DROPDOWN */
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown-toggle {
+      display: inline-block;
+      padding: 8px 18px;
+      background: #fff;
+      color: #333;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-dropdown-toggle:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      min-width: 190px;
+      z-index: 2000;
+      overflow: hidden;
+    }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 12px 18px;
+      color: #333;
+      background: transparent;
+      border-radius: 0;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-dropdown-menu a:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      display: block;
+    }
+
     .call-box {
       background: #fff;
       color: #444;
@@ -279,10 +336,18 @@
       </a>
       <nav class="nav">
         <a href="index.html">HOME</a>
-        <a href="index.html#services-overview">SERVICES</a>
-        <a href="index.html">INDOOR</a>
-        <a href="index.html">OUTDOOR</a>
-        <a href="index.html">GALLERY</a>
+        <div class="nav-dropdown">
+          <a href="services.html" class="nav-dropdown-toggle">SERVICES ▾</a>
+          <div class="nav-dropdown-menu">
+            <a href="pergolas.html">Pergolas</a>
+            <a href="outdoorkitchens.html">Outdoor Kitchens</a>
+            <a href="porcelain.html">Porcelain</a>
+            <a href="blockpaving.html">Block Paving</a>
+            <a href="patios.html">Patios</a>
+            <a href="landscaping.html">Landscaping</a>
+          </div>
+        </div>
+        <a href="index.html#gallery">GALLERY</a>
         <a href="contact.html" class="active">CONTACT</a>
       </nav>
       <div class="call-box">
