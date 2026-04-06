@@ -219,8 +219,8 @@
 
     /* SERVICES OVERVIEW */
     .services-overview {
-      background: #fff;
-      color: #222;
+      background: var(--bg-dark);
+      color: var(--text);
       padding: 60px 0;
     }
 
@@ -232,7 +232,7 @@
     .services-overview-header h2 {
       font-size: 2.2rem;
       margin-bottom: 20px;
-      color: #222;
+      color: var(--text);
     }
 
     .btn-all-services {
@@ -283,11 +283,11 @@
     .overview-card h3 {
       font-size: 1.4rem;
       margin-bottom: 12px;
-      color: #222;
+      color: var(--text);
     }
 
     .overview-card p {
-      color: #555;
+      color: var(--muted);
       margin-bottom: 20px;
       line-height: 1.6;
       flex-grow: 1;
@@ -295,7 +295,7 @@
 
     .btn-cta {
       display: inline-block;
-      background: #222;
+      background: var(--accent);
       color: #fff;
       font-weight: 700;
       font-size: 0.95rem;
@@ -306,7 +306,7 @@
     }
 
     .btn-cta:hover {
-      background: #f97316;
+      background: #5ec458;
     }
 
     /* RESPONSIVE */
@@ -334,7 +334,7 @@
         <a href="#">INDOOR</a>
         <a href="#">OUTDOOR</a>
         <a href="#">GALLERY</a>
-        <a href="#">CONTACT</a>
+        <a href="contact.html">CONTACT</a>
       </nav>
 
       <div class="call-box">
@@ -392,7 +392,7 @@
             </div>
             <h3>Porcelain Driveways</h3>
             <p>Elegant and durable porcelain driveway installations. We use premium porcelain tiles to create stunning, low-maintenance driveways tailored to your home.</p>
-            <a href="services.html" class="btn-cta">Find out more</a>
+            <a href="contact.html" class="btn-cta">Click here</a>
           </div>
           <div class="overview-card">
             <div class="overview-img-wrap">
@@ -400,7 +400,7 @@
             </div>
             <h3>Block Paving</h3>
             <p>Specialist design and installation of quality block paving driveways. We create stunning, durable results using premium materials tailored to your property.</p>
-            <a href="services.html" class="btn-cta">Find out more</a>
+            <a href="contact.html" class="btn-cta">Click here</a>
           </div>
           <div class="overview-card">
             <div class="overview-img-wrap">
@@ -408,28 +408,42 @@
             </div>
             <h3>Patios</h3>
             <p>Stunning porcelain and natural stone patio installations. Create the perfect outdoor living area with our expert patio design and installation service.</p>
-            <a href="services.html" class="btn-cta">Find out more</a>
+            <a href="contact.html" class="btn-cta">Click here</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="services" class="section">
+    <section id="services" class="services-overview" style="border-top: 1px solid rgba(255,255,255,0.1);">
       <div class="container">
-        <h2 style="font-size: 2.5rem; text-align: center; margin-bottom: 40px;">Our Services</h2>
-        <div class="services-grid">
-          <article class="service-card">
-            <h3>Block Paving</h3>
-            <p>Specialist design and installation of quality driveways.</p>
-          </article>
-          <article class="service-card">
+        <div class="services-overview-header">
+          <h2>Outdoor Living Spaces</h2>
+        </div>
+        <div class="overview-grid">
+          <div class="overview-card">
+            <div class="overview-img-wrap">
+              <img src="images/outdoorkitchens.png" alt="Outdoor Kitchens" />
+            </div>
+            <h3>Outdoor Kitchens</h3>
+            <p>Bespoke outdoor kitchen designs built to last. Enjoy al-fresco dining and entertaining with a fully equipped, beautifully crafted outdoor kitchen tailored to your space.</p>
+            <a href="contact.html" class="btn-cta">Click here</a>
+          </div>
+          <div class="overview-card">
+            <div class="overview-img-wrap">
+              <img src="images/landscaping.png" alt="Landscaping" />
+            </div>
             <h3>Landscaping</h3>
-            <p>Full garden design and associated landscaping services.</p>
-          </article>
-          <article class="service-card">
-            <h3>Patios</h3>
-            <p>Stunning porcelain and natural stone patio installations.</p>
-          </article>
+            <p>Full garden design and associated landscaping services. From planting schemes to hard landscaping, we transform outdoor spaces into beautiful, functional environments.</p>
+            <a href="contact.html" class="btn-cta">Click here</a>
+          </div>
+          <div class="overview-card">
+            <div class="overview-img-wrap">
+              <img src="images/pergolas.png" alt="Pergolas" />
+            </div>
+            <h3>Pergolas</h3>
+            <p>Stunning pergola structures designed to enhance your outdoor living area. Providing shade, style, and structure, our pergolas create the perfect garden feature.</p>
+            <a href="contact.html" class="btn-cta">Click here</a>
+          </div>
         </div>
       </div>
     </section>
