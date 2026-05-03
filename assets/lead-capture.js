@@ -1,10 +1,55 @@
 (function () {
+  var trackingConfigLoaded = false;
+
   function pushEvent(name, params) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(Object.assign({ event: name }, params || {}));
     if (typeof window.gtag === "function") {
       window.gtag("event", name, params || {});
     }
+  }
+
+  function loadScript(src, attrs) {
+    var script = document.createElement("script");
+    script.async = true;
+    script.src = src;
+    Object.keys(attrs || {}).forEach(function (key) {
+      script.setAttribute(key, attrs[key]);
+    });
+    document.head.appendChild(script);
+  }
+
+  function loadTrackingConfig() {
+    if (trackingConfigLoaded) return;
+    trackingConfigLoaded = true;
+
+    fetch("/api/site-config", { headers: { "accept": "application/json" } })
+      .then(function (response) {
+        return response.ok ? response.json() : {};
+      })
+      .then(function (config) {
+        if (config.gtmContainerId) {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          loadScript("https://www.googletagmanager.com/gtm.js?id=" + encodeURIComponent(config.gtmContainerId));
+        }
+
+        if (config.gaMeasurementId) {
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+          window.gtag("js", new Date());
+          window.gtag("config", config.gaMeasurementId);
+          loadScript("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(config.gaMeasurementId));
+        }
+
+        if (config.clarityProjectId) {
+          window.clarity = window.clarity || function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+          };
+          loadScript("https://www.clarity.ms/tag/" + encodeURIComponent(config.clarityProjectId));
+        }
+      })
+      .catch(function () {});
   }
 
   function formDataToObject(form) {
@@ -16,6 +61,30 @@
     payload.page = window.location.href;
     payload.source = form.getAttribute("data-source") || "website";
     return payload;
+  }
+
+  function ensureMarketingConsentField(form) {
+    if (form.querySelector("[name='marketing_consent']")) return;
+
+    var submitButton = form.querySelector("button[type='submit']");
+    if (!submitButton) return;
+
+    var wrapper = document.createElement("label");
+    wrapper.style.display = "block";
+    wrapper.style.margin = "0 0 16px";
+    wrapper.style.color = "#e5e5e5";
+    wrapper.style.fontSize = "0.88rem";
+    wrapper.style.lineHeight = "1.45";
+
+    var input = document.createElement("input");
+    input.type = "checkbox";
+    input.name = "marketing_consent";
+    input.value = "yes";
+    input.style.marginRight = "8px";
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(document.createTextNode("I agree to receive occasional updates and offers from Casa4 Developments. Quote follow-up may still be sent about this enquiry."));
+    submitButton.parentNode.insertBefore(wrapper, submitButton);
   }
 
   function buildMailto(payload) {
@@ -133,10 +202,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    loadTrackingConfig();
     prefillServiceFromUrl();
     trackClicks();
 
     document.querySelectorAll("form[data-lead-form]").forEach(function (form) {
+      ensureMarketingConsentField(form);
       form.addEventListener("submit", function (event) {
         event.preventDefault();
         submitLead(form);
