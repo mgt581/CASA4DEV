@@ -10,6 +10,52 @@ Set these in the `casa4dev` Cloudflare Pages project:
 - `LEAD_TO_EMAIL`: where quote requests should go. Multiple recipients can be comma-separated, for example `casa4developments@outlook.com,alex@bryantdigitalsolutions.com`.
 - `LEAD_FROM_EMAIL`: verified sender. Use a Resend-verified domain sender such as `Casa4 Developments <leads@casa4developments.co.uk>` once DNS verification is complete.
 - `LEAD_WEBHOOK_URL`: optional CRM/Zapier/Make webhook. Use this instead of, or alongside, email delivery.
+- `LEADS_EXPORT_TOKEN`: secret token used to download a CSV export from `/api/leads/export?token=...`.
+- `GTM_CONTAINER_ID`: optional Google Tag Manager container ID, for example `GTM-XXXXXXX`.
+- `GA_MEASUREMENT_ID`: optional GA4 measurement ID, for example `G-XXXXXXXXXX`.
+- `CLARITY_PROJECT_ID`: optional Microsoft Clarity project ID for heatmaps and session recordings.
+
+## Cloudflare D1 Lead Storage
+
+The Pages project should have a D1 database binding named:
+
+```text
+LEADS_DB
+```
+
+The schema is stored in:
+
+```text
+migrations/0001_leads.sql
+```
+
+Every valid quote request is stored in D1 whether email delivery succeeds or fails. The table stores enquiry details, source page, form source, delivery status, delivery errors, user agent, a hashed IP address, and whether the visitor opted into marketing.
+
+Download the latest 1,000 leads as CSV:
+
+```text
+/api/leads/export?token=YOUR_LEADS_EXPORT_TOKEN
+```
+
+You can also send the token as an Authorization header:
+
+```text
+Authorization: Bearer YOUR_LEADS_EXPORT_TOKEN
+```
+
+Only share the export token with people who should be allowed to download lead data.
+
+## Mailing List Consent
+
+Quote requests can be followed up as service enquiries. Marketing emails are separate.
+
+The frontend injects an optional consent checkbox into every lead form:
+
+```text
+I agree to receive occasional updates and offers from Casa4 Developments.
+```
+
+Only leads with `marketing_consent = 1` should be imported into newsletters, offers, or remarketing email lists.
 
 The form endpoint is:
 
@@ -32,7 +78,7 @@ The frontend pushes these events into `dataLayer` and `gtag` when available:
 - `generate_lead`
 - `lead_thank_you_view`
 
-Add Google Tag Manager or the Google tag to the site, then map these events in GA4 and Google Ads conversions.
+Set `GTM_CONTAINER_ID` or `GA_MEASUREMENT_ID` in Cloudflare Pages to load Google tracking. Then map these events in GA4 and Google Ads conversions.
 
 Recommended conversions:
 
@@ -65,3 +111,7 @@ Starter landing pages have been added for paid traffic:
 - `campaign-landscaping.html`
 
 Use these as Google Ads final URLs for focused campaigns.
+
+## Heatmaps
+
+Set `CLARITY_PROJECT_ID` in Cloudflare Pages to load Microsoft Clarity for heatmaps and session recordings.

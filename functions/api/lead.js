@@ -28,6 +28,11 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function consentValue(value) {
+  var text = clean(value).toLowerCase();
+  return text === "1" || text === "true" || text === "yes" || text === "on";
+}
+
 function buildEmailHtml(lead) {
   return `
     <h2>New Casa4 Developments quote request</h2>
@@ -38,6 +43,7 @@ function buildEmailHtml(lead) {
       <tr><td><strong>Postcode / Area</strong></td><td>${escapeHtml(lead.postcode || "Not provided")}</td></tr>
       <tr><td><strong>Service</strong></td><td>${escapeHtml(lead.service || "Website enquiry")}</td></tr>
       <tr><td><strong>Timeframe</strong></td><td>${escapeHtml(lead.timeframe || "Not provided")}</td></tr>
+      <tr><td><strong>Marketing consent</strong></td><td>${lead.marketingConsent ? "Yes" : "No"}</td></tr>
       <tr><td><strong>Source</strong></td><td>${escapeHtml(lead.source || "website")}</td></tr>
       <tr><td><strong>Page</strong></td><td>${escapeHtml(lead.page || "Not provided")}</td></tr>
     </table>
@@ -71,6 +77,60 @@ async function sendWithResend(env, lead) {
   if (!response.ok) {
     throw new Error("Resend rejected the lead email: " + response.status);
   }
+
+  return true;
+}
+
+async function hashIp(ip) {
+  if (!ip || !crypto.subtle) return "";
+  var data = new TextEncoder().encode(ip);
+  var digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest)).map(function(byte) {
+    return byte.toString(16).padStart(2, "0");
+  }).join("");
+}
+
+async function storeLead(env, request, lead, deliveryStatus, deliveryErrors) {
+  if (!env.LEADS_DB) return false;
+
+  var ipHash = await hashIp(request.headers.get("cf-connecting-ip") || "");
+  var userAgent = clean(request.headers.get("user-agent"));
+
+  await env.LEADS_DB.prepare(
+    `INSERT INTO leads (
+      submitted_at,
+      name,
+      phone,
+      email,
+      postcode,
+      service,
+      timeframe,
+      message,
+      page,
+      source,
+      marketing_consent,
+      delivery_status,
+      delivery_errors,
+      user_agent,
+      ip_hash
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    lead.submittedAt,
+    lead.name,
+    lead.phone,
+    lead.email,
+    lead.postcode,
+    lead.service,
+    lead.timeframe,
+    lead.message,
+    lead.page,
+    lead.source,
+    lead.marketingConsent ? 1 : 0,
+    deliveryStatus,
+    deliveryErrors.join(" | "),
+    userAgent,
+    ipHash
+  ).run();
 
   return true;
 }
@@ -111,7 +171,8 @@ export async function onRequestPost(context) {
       message: clean(payload.message),
       page: clean(payload.page),
       submittedAt: new Date().toISOString(),
-      source: clean(payload.source) || "website"
+      source: clean(payload.source) || "website",
+      marketingConsent: consentValue(payload.marketing_consent)
     };
 
     if (!lead.name || !lead.phone) {
@@ -133,6 +194,12 @@ export async function onRequestPost(context) {
       } catch (error) {
         deliveryErrors.push(error.message);
       }
+    }
+
+    try {
+      await storeLead(env, request, lead, delivered ? "delivered" : "failed", deliveryErrors);
+    } catch (error) {
+      console.error("Lead database storage failed:", error.message);
     }
 
     if (!delivered) {
