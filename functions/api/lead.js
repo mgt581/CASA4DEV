@@ -33,6 +33,10 @@ function consentValue(value) {
   return text === "1" || text === "true" || text === "yes" || text === "on";
 }
 
+function cleanOptional(value) {
+  return clean(value).slice(0, 1000);
+}
+
 function buildEmailHtml(lead) {
   return `
     <h2>New Casa4 Developments quote request</h2>
@@ -112,8 +116,20 @@ async function storeLead(env, request, lead, deliveryStatus, deliveryErrors) {
       delivery_status,
       delivery_errors,
       user_agent,
-      ip_hash
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ip_hash,
+      landing_page,
+      referrer,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_term,
+      utm_content,
+      gclid,
+      fbclid,
+      msclkid,
+      session_id,
+      client_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(
     lead.submittedAt,
     lead.name,
@@ -128,6 +144,69 @@ async function storeLead(env, request, lead, deliveryStatus, deliveryErrors) {
     lead.marketingConsent ? 1 : 0,
     deliveryStatus,
     deliveryErrors.join(" | "),
+    userAgent,
+    ipHash,
+    lead.landingPage,
+    lead.referrer,
+    lead.utmSource,
+    lead.utmMedium,
+    lead.utmCampaign,
+    lead.utmTerm,
+    lead.utmContent,
+    lead.gclid,
+    lead.fbclid,
+    lead.msclkid,
+    lead.sessionId,
+    lead.clientId
+  ).run();
+
+  return true;
+}
+
+async function storeLeadEvent(env, request, lead, eventName) {
+  if (!env.LEADS_DB) return false;
+
+  var ipHash = await hashIp(request.headers.get("cf-connecting-ip") || "");
+  var userAgent = clean(request.headers.get("user-agent"));
+
+  await env.LEADS_DB.prepare(
+    `INSERT INTO lead_events (
+      occurred_at,
+      event_name,
+      page,
+      landing_page,
+      referrer,
+      source,
+      medium,
+      campaign,
+      term,
+      content,
+      gclid,
+      fbclid,
+      msclkid,
+      service,
+      session_id,
+      client_id,
+      user_agent,
+      ip_hash
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    new Date().toISOString(),
+    eventName,
+    lead.page,
+    lead.landingPage,
+    lead.referrer,
+    lead.utmSource || lead.source,
+    lead.utmMedium,
+    lead.utmCampaign,
+    lead.utmTerm,
+    lead.utmContent,
+    lead.gclid,
+    lead.fbclid,
+    lead.msclkid,
+    lead.service,
+    lead.sessionId,
+    lead.clientId,
     userAgent,
     ipHash
   ).run();
@@ -172,7 +251,19 @@ export async function onRequestPost(context) {
       page: clean(payload.page),
       submittedAt: new Date().toISOString(),
       source: clean(payload.source) || "website",
-      marketingConsent: consentValue(payload.marketing_consent)
+      marketingConsent: consentValue(payload.marketing_consent),
+      landingPage: cleanOptional(payload.landing_page),
+      referrer: cleanOptional(payload.referrer),
+      utmSource: cleanOptional(payload.utm_source),
+      utmMedium: cleanOptional(payload.utm_medium),
+      utmCampaign: cleanOptional(payload.utm_campaign),
+      utmTerm: cleanOptional(payload.utm_term),
+      utmContent: cleanOptional(payload.utm_content),
+      gclid: cleanOptional(payload.gclid),
+      fbclid: cleanOptional(payload.fbclid),
+      msclkid: cleanOptional(payload.msclkid),
+      sessionId: cleanOptional(payload.session_id),
+      clientId: cleanOptional(payload.client_id)
     };
 
     if (!lead.name || !lead.phone) {
@@ -198,6 +289,7 @@ export async function onRequestPost(context) {
 
     try {
       await storeLead(env, request, lead, delivered ? "delivered" : "failed", deliveryErrors);
+      await storeLeadEvent(env, request, lead, delivered ? "generate_lead" : "lead_delivery_failed");
     } catch (error) {
       console.error("Lead database storage failed:", error.message);
     }

@@ -1,12 +1,100 @@
 (function () {
   var trackingConfigLoaded = false;
+  var pageTracked = false;
+
+  function getStorageValue(storage, key) {
+    try {
+      return storage.getItem(key);
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function setStorageValue(storage, key, value) {
+    try {
+      storage.setItem(key, value);
+    } catch (error) {}
+  }
+
+  function randomId(prefix) {
+    return prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+  }
+
+  function getClientId() {
+    var key = "casa4_client_id";
+    var value = getStorageValue(window.localStorage, key);
+    if (!value) {
+      value = randomId("client");
+      setStorageValue(window.localStorage, key, value);
+    }
+    return value;
+  }
+
+  function getSessionId() {
+    var key = "casa4_session_id";
+    var value = getStorageValue(window.sessionStorage, key);
+    if (!value) {
+      value = randomId("session");
+      setStorageValue(window.sessionStorage, key, value);
+    }
+    return value;
+  }
+
+  function getLandingPage() {
+    var key = "casa4_landing_page";
+    var value = getStorageValue(window.sessionStorage, key);
+    if (!value) {
+      value = window.location.href;
+      setStorageValue(window.sessionStorage, key, value);
+    }
+    return value;
+  }
+
+  function getAttribution() {
+    var params = new URLSearchParams(window.location.search);
+    return {
+      page: window.location.href,
+      landing_page: getLandingPage(),
+      referrer: document.referrer || "",
+      utm_source: params.get("utm_source") || "",
+      utm_medium: params.get("utm_medium") || "",
+      utm_campaign: params.get("utm_campaign") || "",
+      utm_term: params.get("utm_term") || "",
+      utm_content: params.get("utm_content") || "",
+      gclid: params.get("gclid") || "",
+      fbclid: params.get("fbclid") || "",
+      msclkid: params.get("msclkid") || "",
+      session_id: getSessionId(),
+      client_id: getClientId()
+    };
+  }
+
+  function storeLeadEvent(payload) {
+    var body = JSON.stringify(payload);
+
+    if (navigator.sendBeacon) {
+      try {
+        var blob = new Blob([body], { type: "application/json" });
+        if (navigator.sendBeacon("/api/lead-event", blob)) return;
+      } catch (error) {}
+    }
+
+    fetch("/api/lead-event", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: body,
+      keepalive: true
+    }).catch(function () {});
+  }
 
   function pushEvent(name, params) {
+    var eventPayload = Object.assign({}, getAttribution(), params || {}, { event_name: name });
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(Object.assign({ event: name }, params || {}));
     if (typeof window.gtag === "function") {
       window.gtag("event", name, params || {});
     }
+    storeLeadEvent(eventPayload);
   }
 
   function loadScript(src, attrs) {
@@ -60,7 +148,7 @@
     });
     payload.page = window.location.href;
     payload.source = form.getAttribute("data-source") || "website";
-    return payload;
+    return Object.assign(payload, getAttribution());
   }
 
   function ensureMarketingConsentField(form) {
@@ -134,7 +222,8 @@
 
     pushEvent("lead_form_submit_attempt", {
       service: payload.service || "Website enquiry",
-      form_source: payload.source
+      form_source: payload.source,
+      source: payload.source
     });
 
     try {
@@ -151,7 +240,8 @@
 
       pushEvent("generate_lead", {
         service: payload.service || "Website enquiry",
-        form_source: payload.source
+        form_source: payload.source,
+        source: payload.source
       });
 
       window.location.href = result.redirect || "/thank-you.html";
@@ -184,19 +274,32 @@
   function trackClicks() {
     document.querySelectorAll("a[href^='tel:']").forEach(function (link) {
       link.addEventListener("click", function () {
-        pushEvent("phone_click", { link_text: link.textContent.trim() });
+        pushEvent("phone_click", {
+          link_text: link.textContent.trim(),
+          link_url: link.href,
+          phone_number: link.getAttribute("href").replace(/^tel:/, "")
+        });
       });
     });
 
     document.querySelectorAll("a[href*='wa.me']").forEach(function (link) {
       link.addEventListener("click", function () {
-        pushEvent("whatsapp_click", { link_text: link.textContent.trim() });
+        var match = link.href.match(/wa\.me\/([^?]+)/);
+        pushEvent("whatsapp_click", {
+          link_text: link.textContent.trim(),
+          link_url: link.href,
+          whatsapp_number: match ? match[1] : ""
+        });
       });
     });
 
     document.querySelectorAll("a[href*='contact.html']").forEach(function (link) {
       link.addEventListener("click", function () {
-        pushEvent("quote_cta_click", { link_text: link.textContent.trim(), href: link.getAttribute("href") });
+        pushEvent("quote_cta_click", {
+          link_text: link.textContent.trim(),
+          link_url: link.href,
+          href: link.getAttribute("href")
+        });
       });
     });
   }
@@ -205,6 +308,10 @@
     loadTrackingConfig();
     prefillServiceFromUrl();
     trackClicks();
+    if (!pageTracked) {
+      pageTracked = true;
+      pushEvent("page_view", {});
+    }
 
     document.querySelectorAll("form[data-lead-form]").forEach(function (form) {
       ensureMarketingConsentField(form);

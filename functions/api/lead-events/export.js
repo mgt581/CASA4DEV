@@ -22,31 +22,26 @@ function csvEscape(value) {
 
 function csvResponse(rows) {
   var headers = [
-    "submitted_at",
-    "name",
-    "phone",
-    "email",
-    "postcode",
-    "service",
-    "timeframe",
-    "message",
+    "occurred_at",
+    "event_name",
     "page",
-    "source",
     "landing_page",
     "referrer",
-    "utm_source",
-    "utm_medium",
-    "utm_campaign",
-    "utm_term",
-    "utm_content",
+    "source",
+    "medium",
+    "campaign",
+    "term",
+    "content",
     "gclid",
     "fbclid",
     "msclkid",
+    "service",
+    "link_url",
+    "link_text",
+    "phone_number",
+    "whatsapp_number",
     "session_id",
-    "client_id",
-    "marketing_consent",
-    "delivery_status",
-    "delivery_errors"
+    "client_id"
   ];
 
   var lines = [headers.join(",")];
@@ -59,7 +54,7 @@ function csvResponse(rows) {
   return new Response(lines.join("\n") + "\n", {
     headers: {
       "content-type": "text/csv; charset=utf-8",
-      "content-disposition": 'attachment; filename="casa4-leads.csv"',
+      "content-disposition": 'attachment; filename="casa4-lead-events.csv"',
       "cache-control": "no-store"
     }
   });
@@ -73,7 +68,7 @@ export async function onRequestGet(context) {
   var requestToken = bearerToken || clean(new URL(context.request.url).searchParams.get("token"));
 
   if (!token) {
-    return textResponse("Lead export is not configured.", 503);
+    return textResponse("Lead event export is not configured.", 503);
   }
 
   if (!requestToken || requestToken !== token) {
@@ -86,34 +81,29 @@ export async function onRequestGet(context) {
 
   var result = await env.LEADS_DB.prepare(
     `SELECT
-      submitted_at,
-      name,
-      phone,
-      email,
-      postcode,
-      service,
-      timeframe,
-      message,
+      occurred_at,
+      event_name,
       page,
-      source,
       landing_page,
       referrer,
-      utm_source,
-      utm_medium,
-      utm_campaign,
-      utm_term,
-      utm_content,
+      source,
+      medium,
+      campaign,
+      term,
+      content,
       gclid,
       fbclid,
       msclkid,
+      service,
+      link_url,
+      link_text,
+      phone_number,
+      whatsapp_number,
       session_id,
-      client_id,
-      marketing_consent,
-      delivery_status,
-      delivery_errors
-    FROM leads
-    ORDER BY submitted_at DESC
-    LIMIT 1000`
+      client_id
+    FROM lead_events
+    ORDER BY occurred_at DESC
+    LIMIT 5000`
   ).all();
 
   return csvResponse(result.results || []);
