@@ -3,8 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Casa4 Developments | Indoor & Outdoor Living</title>
-  <meta name="description" content="Casa4 Developments - family-run home improvement specialists in Fareham, Hampshire. Driveways, patios, landscaping and outdoor living spaces." />
+  <title>Casa4 Developments | Driveways, Patios & Home Improvements in Fareham</title>
+  <meta name="description" content="Request a free quote from Casa4 Developments, family-run home improvement specialists in Fareham, Hampshire. Driveways, patios, landscaping, outdoor kitchens and indoor renovations." />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HomeAndConstructionBusiness",
+      "name": "Casa4 Developments",
+      "image": "https://casa4dev.pages.dev/images/logo.png",
+      "url": "https://casa4dev.pages.dev/",
+      "telephone": ["01489 290012", "07900 281011"],
+      "email": "info@casa4developments.co.uk",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Fareham",
+        "addressRegion": "Hampshire",
+        "addressCountry": "GB"
+      },
+      "areaServed": ["Fareham", "Hampshire", "South Coast"],
+      "description": "Family-run home improvement specialists for driveways, patios, landscaping, outdoor kitchens, bathrooms, kitchens and extensions.",
+      "sameAs": [
+        "https://www.checkatrade.com/trades/Casa4DevelopmentsLtd",
+        "https://www.trustatrader.com/blockpaving-driveways-in-Portsmouth",
+        "https://g.page/r/Cda-r7HFwhqHEAE/review"
+      ]
+    }
+  </script>
 
   <style>
     :root {
@@ -187,6 +211,14 @@
       background: #333;
     }
 
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.58), rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.05));
+      pointer-events: none;
+    }
+
     .hero-image {
       width: 100%;
       min-height: 520px;
@@ -197,7 +229,27 @@
       position: absolute;
       left: 40px;
       top: 40px;
-      max-width: 360px;
+      width: min(620px, calc(100% - 80px));
+      z-index: 1;
+    }
+
+    .hero-copy {
+      margin-bottom: 22px;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.55);
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2.1rem, 5vw, 4.5rem);
+      line-height: 0.98;
+      margin-bottom: 16px;
+      font-weight: 900;
+    }
+
+    .hero-copy p {
+      max-width: 420px;
+      font-size: 1.08rem;
+      color: #f4f4f4;
+      font-weight: 700;
     }
 
     .finance-badge {
@@ -206,10 +258,9 @@
       border-radius: 20px;
       padding: 18px 22px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      
-      /* --- THIS IS THE CRUCIAL CHANGE --- */
-      margin-bottom: 50px; /* INCREASED THIS to move the buttons DOWN */
-      /* ---------------------------------- */
+      margin-bottom: 18px;
+      max-width: 400px;
+      width: 100%;
     }
 
     .finance-badge strong {
@@ -222,9 +273,9 @@
 
     .hero-actions {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 12px;
-      max-width: 260px;
+      max-width: 520px;
     }
 
     /* BUTTONS */
@@ -598,9 +649,22 @@
     /* RESPONSIVE */
     @media (max-width: 980px) {
       .nav-wrap { flex-direction: column; }
+      .nav { width: 100%; max-width: 292px; gap: 10px; }
+      .nav a,
+      .nav-dropdown-toggle {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
       .trust-grid { grid-template-columns: 1fr; }
-      .hero-image { min-height: 400px; }
-      .hero-overlay { left: 20px; top: 20px; }
+      .hero-card { margin: 0; }
+      .hero-image { min-height: 540px; }
+      .hero-overlay { left: 20px; top: 20px; width: calc(100% - 40px); }
+      .hero-copy { max-width: 310px; }
+      .hero-copy h1 { font-size: 1.9rem; }
+      .hero-copy p { max-width: 300px; font-size: 0.9rem; }
+      .finance-badge { margin-bottom: 22px; padding: 14px 18px; max-width: 292px; }
+      .finance-badge strong { font-size: 1.5rem; }
+      .hero-actions { max-width: 260px; }
       .overview-grid { grid-template-columns: 1fr; }
       .overview-img-wrap { width: 180px; height: 180px; }
       .contact-us-layout { grid-template-columns: 1fr; }
@@ -656,6 +720,10 @@
         <div class="hero-card">
           <img class="hero-image" src="images/hero.jpg" alt="Casa4 Developments project" />
           <div class="hero-overlay">
+            <div class="hero-copy">
+              <h1>Driveways, Patios & Outdoor Living</h1>
+              <p>Family-run home improvement specialists in Fareham, Hampshire. Free, no-obligation quotes across the South Coast.</p>
+            </div>
             <div class="finance-badge">
               <div>NOW OFFERING</div>
               <strong>0% FINANCE</strong>
@@ -663,7 +731,7 @@
             </div>
             <div class="hero-actions">
               <a href="https://wa.me/447900281011" class="btn btn-whatsapp">WhatsApp</a>
-              <a href="#" class="btn btn-quote">Get a Free Quote</a>
+              <a href="contact.html" class="btn btn-quote">Get a Free Quote</a>
             </div>
           </div>
         </div>
@@ -808,7 +876,7 @@
         <!-- Right: enquiry form -->
         <div class="contact-form-panel">
           <h3>Request a Free Quote</h3>
-          <form id="homeContactForm" novalidate>
+          <form id="homeContactForm" data-lead-form data-source="homepage" novalidate>
             <div class="contact-form-group">
               <label for="hc-name">Full Name *</label>
               <input type="text" id="hc-name" name="name" placeholder="Your full name" required />
@@ -816,6 +884,10 @@
             <div class="contact-form-group">
               <label for="hc-phone">Phone Number *</label>
               <input type="tel" id="hc-phone" name="phone" placeholder="Your phone number" required />
+            </div>
+            <div class="contact-form-group">
+              <label for="hc-postcode">Postcode / Area</label>
+              <input type="text" id="hc-postcode" name="postcode" placeholder="e.g. Fareham, PO16" />
             </div>
             <div class="contact-form-group">
               <label for="hc-email">Email Address</label>
@@ -841,8 +913,21 @@
               </select>
             </div>
             <div class="contact-form-group">
+              <label for="hc-timeframe">Ideal Timeframe</label>
+              <select id="hc-timeframe" name="timeframe">
+                <option value="">— Please select —</option>
+                <option>As soon as possible</option>
+                <option>Within 1 month</option>
+                <option>1-3 months</option>
+                <option>3+ months</option>
+                <option>Just researching</option>
+              </select>
+            </div>
+            <div class="contact-form-group">
               <label for="hc-message">Tell us about your project</label>
               <textarea id="hc-message" name="message" placeholder="Describe your project or ask a question…"></textarea>
+              <input type="text" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0;" aria-hidden="true" />
+              <p data-form-status style="display:none;margin:0 0 14px;color:#e5e5e5;text-align:center;"></p>
             </div>
             <button type="submit" class="btn-contact-submit">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
@@ -851,8 +936,8 @@
           </form>
           <div class="contact-form-success" id="homeFormSuccess">
             <div style="font-size:2.5rem;margin-bottom:10px;">✅</div>
-            <h3>Message Sent!</h3>
-            <p>Thank you — we'll be in touch within one business day.</p>
+            <h3>Quote Request Sent</h3>
+            <p>Thank you. We will be in touch soon. You can also call or WhatsApp us for the fastest reply.</p>
           </div>
         </div>
 
@@ -873,19 +958,7 @@
       </div>
     </div>
   </footer>
-  <script>
-    document.getElementById('homeContactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var name = document.getElementById('hc-name').value.trim();
-      var phone = document.getElementById('hc-phone').value.trim();
-      if (!name || !phone) {
-        alert('Please enter your name and phone number.');
-        return;
-      }
-      this.style.display = 'none';
-      document.getElementById('homeFormSuccess').style.display = 'block';
-    });
-  </script>
+  <script src="assets/lead-capture.js"></script>
 
 </body>
 </html>
