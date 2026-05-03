@@ -7,8 +7,8 @@ This site is now wired for direct lead capture and ad conversion tracking, but t
 Set these in the `casa4dev` Cloudflare Pages project:
 
 - `RESEND_API_KEY`: API key from Resend for sending lead emails.
-- `LEAD_TO_EMAIL`: where quote requests should go, for example `info@casa4developments.co.uk`.
-- `LEAD_FROM_EMAIL`: verified sender, for example `Casa4 Developments <leads@casa4developments.co.uk>`.
+- `LEAD_TO_EMAIL`: where quote requests should go. Multiple recipients can be comma-separated, for example `casa4developments@outlook.com,alex@bryantdigitalsolutions.com`.
+- `LEAD_FROM_EMAIL`: verified sender, currently planned as `casa4developments@outlook.com`.
 - `LEAD_WEBHOOK_URL`: optional CRM/Zapier/Make webhook. Use this instead of, or alongside, email delivery.
 
 The form endpoint is:

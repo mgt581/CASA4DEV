@@ -12,6 +12,13 @@ function clean(value) {
   return String(value || "").trim();
 }
 
+function emailList(value, fallback) {
+  return clean(value || fallback)
+    .split(",")
+    .map(function(email) { return email.trim(); })
+    .filter(Boolean);
+}
+
 function buildEmailHtml(lead) {
   return `
     <h2>New Casa4 Developments quote request</h2>
@@ -32,7 +39,7 @@ function buildEmailHtml(lead) {
 async function sendWithResend(env, lead) {
   if (!env.RESEND_API_KEY) return false;
 
-  var to = env.LEAD_TO_EMAIL || "info@casa4developments.co.uk";
+  var to = emailList(env.LEAD_TO_EMAIL, "info@casa4developments.co.uk");
   var from = env.LEAD_FROM_EMAIL || "Casa4 Developments <leads@casa4developments.co.uk>";
   var subject = "New quote request - " + (lead.service || "Website enquiry");
 
@@ -44,7 +51,7 @@ async function sendWithResend(env, lead) {
     },
     body: JSON.stringify({
       from,
-      to: [to],
+      to,
       reply_to: lead.email || undefined,
       subject,
       html: buildEmailHtml(lead)
