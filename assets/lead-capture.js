@@ -28,7 +28,7 @@
         return response.ok ? response.json() : {};
       })
       .then(function (config) {
-        if (config.gtmContainerId) {
+        if (config.gtmContainerId && !document.querySelector("script[src*='googletagmanager.com/gtm.js']")) {
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
           loadScript("https://www.googletagmanager.com/gtm.js?id=" + encodeURIComponent(config.gtmContainerId));
