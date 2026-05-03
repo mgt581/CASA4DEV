@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us | Casa4 Developments</title>
-  <meta name="description" content="Get in touch with Casa4 Developments. Request a free quote for driveways, patios, landscaping, outdoor kitchens, pergolas and more in Fareham, Hampshire." />
+  <title>Get a Free Quote | Casa4 Developments Fareham</title>
+  <meta name="description" content="Contact Casa4 Developments for a free quote in Fareham, Hampshire. Call, WhatsApp or send details for driveways, patios, landscaping and home improvements." />
 
   <style>
     :root {
@@ -405,7 +405,7 @@
             <a href="extensions.html">Extensions</a>
           </div>
         </div>
-        <a href="index.html#gallery">GALLERY</a>
+        <a href="gallery.html">GALLERY</a>
         <a href="contact.html" class="active">CONTACT</a>
       </nav>
       <div class="call-box">
@@ -540,6 +540,21 @@
   </footer>
 
   <script>
+    function prefillServiceFromUrl() {
+      var params = new URLSearchParams(window.location.search);
+      var requestedService = params.get('service');
+      if (!requestedService) return;
+
+      var serviceSelect = document.getElementById('service');
+      Array.from(serviceSelect.options).some(function(option) {
+        if (option.text === requestedService) {
+          serviceSelect.value = option.value;
+          return true;
+        }
+        return false;
+      });
+    }
+
     function sendQuoteEmail(form, successId) {
       var data = new FormData(form);
       var name = (data.get('name') || '').trim();
@@ -577,6 +592,7 @@
       e.preventDefault();
       sendQuoteEmail(this, 'formSuccess');
     });
+    prefillServiceFromUrl();
   </script>
 
 </body>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pergolas | Casa4 Developments</title>
-  <meta name="description" content="Stunning pergola structures designed to enhance your outdoor living area. Providing shade, style and structure by Casa4 Developments, Fareham, Hampshire." />
+  <title>Pergola Installation Fareham | Casa4 Developments</title>
+  <meta name="description" content="Bespoke pergola design and installation in Fareham, Hampshire. Add shade, style and structure to your garden with Casa4 Developments." />
 
   <style>
     :root {
@@ -174,6 +174,70 @@
       flex-wrap: wrap;
     }
 
+    .lead-proof-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .proof-item {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 16px 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .proof-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+
+    .process-panel {
+      background: rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 34px;
+      margin-bottom: 60px;
+    }
+
+    .process-panel h2 {
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .process-step {
+      background: rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .process-step strong {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      background: #c05515;
+      color: #fff;
+      border-radius: 50%;
+      margin-bottom: 14px;
+    }
+
+    .process-step h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .process-step p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+
     /* CONTENT SECTION */
     .content-section {
       padding: 70px 0;
@@ -300,13 +364,28 @@
 
     @media (max-width: 980px) {
       .nav-wrap { flex-direction: column; }
+      .nav { width: 100%; max-width: 292px; gap: 10px; }
+      .nav a,
+      .nav-dropdown-toggle {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
       .content-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr 1fr; }
+      .lead-proof-strip { grid-template-columns: 1fr 1fr; }
+      .process-steps { grid-template-columns: 1fr; }
       .page-hero h1 { font-size: 2rem; }
     }
 
     @media (max-width: 600px) {
+      .page-hero { padding: 50px 0 44px; }
+      .page-hero p { max-width: 320px; }
+      .hero-cta-group,
+      .cta-group { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 260px; }
       .features-grid { grid-template-columns: 1fr; }
+      .lead-proof-strip { grid-template-columns: 1fr; }
+      .process-panel { padding: 28px 20px; }
       .cta-banner { padding: 36px 20px; }
     }
   </style>
@@ -337,7 +416,7 @@
             <a href="extensions.html">Extensions</a>
           </div>
         </div>
-        <a href="index.html#gallery">GALLERY</a>
+        <a href="gallery.html">GALLERY</a>
         <a href="contact.html">CONTACT</a>
       </nav>
       <div class="call-box">
@@ -353,8 +432,14 @@
         <h1>Pergolas</h1>
         <p>Stunning pergola structures designed to enhance your outdoor living area. Providing shade, style and structure, our pergolas create the perfect garden feature.</p>
         <div class="hero-cta-group">
-          <a href="contact.html" class="btn btn-quote">Get a Free Quote</a>
+          <a href="contact.html?service=Pergolas" class="btn btn-quote">Get a Free Quote</a>
           <a href="https://wa.me/447900281011" class="btn btn-whatsapp">WhatsApp Us</a>
+        </div>
+        <div class="lead-proof-strip" aria-label="Why choose Casa4 Developments">
+          <div class="proof-item">Free quotes<span>No-obligation advice before you commit</span></div>
+          <div class="proof-item">0% finance<span>Upgrade now and spread the cost</span></div>
+          <div class="proof-item">Local team<span>Fareham, Hampshire and South Coast</span></div>
+          <div class="proof-item">Verified profiles<span>Checkatrade, TrustATrader and Google</span></div>
         </div>
       </div>
     </div>
@@ -368,7 +453,7 @@
             <h2>Transform Your Outdoor Space</h2>
             <p>A beautifully crafted pergola is the perfect way to extend your living space into the garden. Whether you're looking for a sheltered dining area, a shaded retreat, or a stylish garden feature, our bespoke pergolas are designed and built to suit your exact requirements.</p>
             <p>Our experienced team designs and installs pergolas using premium materials that are built to last, ensuring your outdoor structure looks stunning year after year with minimal maintenance.</p>
-            <a href="contact.html" class="btn btn-quote">Request a Quote</a>
+            <a href="contact.html?service=Pergolas" class="btn btn-quote">Request a Quote</a>
           </div>
         </div>
 
@@ -390,11 +475,32 @@
           </div>
         </div>
 
+        <div class="process-panel">
+          <h2>A Simple, Reliable Process</h2>
+          <div class="process-steps">
+            <div class="process-step">
+              <strong>1</strong>
+              <h3>Tell us what you need</h3>
+              <p>Share your project details, location and ideal timeframe so we can understand the work properly.</p>
+            </div>
+            <div class="process-step">
+              <strong>2</strong>
+              <h3>Get clear advice</h3>
+              <p>We discuss practical options, materials and the best approach for your home and budget.</p>
+            </div>
+            <div class="process-step">
+              <strong>3</strong>
+              <h3>Receive your quote</h3>
+              <p>You get a free, no-obligation quote with a straightforward route to booking the work.</p>
+            </div>
+          </div>
+        </div>
+
         <div class="cta-banner">
           <h2>Ready to Add a Pergola?</h2>
           <p>Contact us today for a free, no-obligation quote. We cover Fareham, Hampshire and the wider South Coast area.</p>
           <div class="cta-group">
-            <a href="contact.html" class="btn btn-quote">Get a Free Quote</a>
+            <a href="contact.html?service=Pergolas" class="btn btn-quote">Get a Free Quote</a>
             <a href="https://wa.me/447900281011" class="btn btn-whatsapp"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>WhatsApp Us</a>
             <a href="tel:01489290012" class="btn btn-back"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.92z"/></svg>01489 290012</a>
           </div>
