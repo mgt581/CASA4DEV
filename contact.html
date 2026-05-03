@@ -448,7 +448,7 @@
         <div class="contact-narrow">
           <div class="form-panel">
             <h2>Request a Free Quote</h2>
-            <form id="contactForm" novalidate>
+            <form id="contactForm" data-lead-form data-source="contact-page" novalidate>
               <div class="form-group">
                 <label for="name">Full Name *</label>
                 <input type="text" id="name" name="name" placeholder="Your full name" required />
@@ -498,14 +498,16 @@
               <div class="form-group">
                 <label for="message">Tell us about your project</label>
                 <textarea id="message" name="message" placeholder="Describe your project, any specific requirements, or simply ask a question…"></textarea>
+                <input type="text" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0;" aria-hidden="true" />
+                <p data-form-status style="display:none;margin:0 0 14px;color:#e5e5e5;text-align:center;"></p>
               </div>
               <button type="submit" class="btn-submit"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>Send Message &amp; Request Free Quote</button>
             </form>
 
             <div class="form-success" id="formSuccess">
               <div class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div>
-              <h3>Quote Request Prepared</h3>
-              <p>Your email app should open with the enquiry ready to send. You can also call or WhatsApp us for the fastest reply.</p>
+              <h3>Quote Request Sent</h3>
+              <p>Thank you. We will be in touch soon. You can also call or WhatsApp us for the fastest reply.</p>
             </div>
           </div>
 
@@ -539,61 +541,7 @@
     </div>
   </footer>
 
-  <script>
-    function prefillServiceFromUrl() {
-      var params = new URLSearchParams(window.location.search);
-      var requestedService = params.get('service');
-      if (!requestedService) return;
-
-      var serviceSelect = document.getElementById('service');
-      Array.from(serviceSelect.options).some(function(option) {
-        if (option.text === requestedService) {
-          serviceSelect.value = option.value;
-          return true;
-        }
-        return false;
-      });
-    }
-
-    function sendQuoteEmail(form, successId) {
-      var data = new FormData(form);
-      var name = (data.get('name') || '').trim();
-      var phone = (data.get('phone') || '').trim();
-
-      if (!name || !phone) {
-        alert('Please enter your name and phone number.');
-        return;
-      }
-
-      var service = data.get('service') || 'Website enquiry';
-      var subject = 'Casa4 Developments quote request - ' + service;
-      var body = [
-        'New quote request from casa4developments.co.uk',
-        '',
-        'Name: ' + name,
-        'Phone: ' + phone,
-        'Email: ' + (data.get('email') || 'Not provided'),
-        'Postcode / Area: ' + (data.get('postcode') || 'Not provided'),
-        'Service Required: ' + service,
-        'Ideal Timeframe: ' + (data.get('timeframe') || 'Not provided'),
-        '',
-        'Project Details:',
-        data.get('message') || 'Not provided',
-        '',
-        'Page: ' + window.location.href
-      ].join('\n');
-
-      window.location.href = 'mailto:info@casa4developments.co.uk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      form.style.display = 'none';
-      document.getElementById(successId).style.display = 'block';
-    }
-
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      sendQuoteEmail(this, 'formSuccess');
-    });
-    prefillServiceFromUrl();
-  </script>
+  <script src="assets/lead-capture.js"></script>
 
 </body>
 </html>

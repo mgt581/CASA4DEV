@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You | Casa4 Developments</title>
+  <meta name="description" content="Thank you for requesting a quote from Casa4 Developments. We will be in touch soon." />
+  <style>
+    :root {
+      --bg-dark: #474c53;
+      --panel: #616771;
+      --text: #ffffff;
+      --muted: #e5e5e5;
+      --accent: #4e9645;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      line-height: 1.5;
+    }
+
+    .panel {
+      max-width: 680px;
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+    }
+
+    img {
+      width: 140px;
+      margin: 0 auto 28px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 28px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 50px;
+      padding: 15px 26px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+    }
+
+    a.secondary {
+      background: #fff;
+      color: #333;
+    }
+
+    @media (max-width: 560px) {
+      .panel { padding: 36px 22px; }
+      h1 { font-size: 2rem; }
+      a { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <img src="images/logo.png" alt="Casa4 Developments" />
+    <h1>Thank You</h1>
+    <p>Your quote request has been received. Casa4 Developments will be in touch as soon as possible. For the fastest response, you can also call or WhatsApp the team now.</p>
+    <div class="actions">
+      <a href="tel:01489290012">Call 01489 290012</a>
+      <a href="https://wa.me/447900281011">WhatsApp Us</a>
+      <a href="index.html" class="secondary">Back to Home</a>
+    </div>
+  </main>
+  <script src="assets/lead-capture.js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "lead_thank_you_view" });
+  </script>
+</body>
+</html>
