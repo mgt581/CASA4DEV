@@ -458,6 +458,10 @@
                 <input type="tel" id="phone" name="phone" placeholder="Your phone number" required />
               </div>
               <div class="form-group">
+                <label for="postcode">Postcode / Area</label>
+                <input type="text" id="postcode" name="postcode" placeholder="e.g. Fareham, PO16" />
+              </div>
+              <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" placeholder="Your email address" />
               </div>
@@ -481,6 +485,17 @@
                 </select>
               </div>
               <div class="form-group">
+                <label for="timeframe">Ideal Timeframe</label>
+                <select id="timeframe" name="timeframe">
+                  <option value="">— Please select —</option>
+                  <option>As soon as possible</option>
+                  <option>Within 1 month</option>
+                  <option>1-3 months</option>
+                  <option>3+ months</option>
+                  <option>Just researching</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="message">Tell us about your project</label>
                 <textarea id="message" name="message" placeholder="Describe your project, any specific requirements, or simply ask a question…"></textarea>
               </div>
@@ -489,8 +504,8 @@
 
             <div class="form-success" id="formSuccess">
               <div class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div>
-              <h3>Message Sent!</h3>
-              <p>Thank you for getting in touch. We'll be back to you within one business day.</p>
+              <h3>Quote Request Prepared</h3>
+              <p>Your email app should open with the enquiry ready to send. You can also call or WhatsApp us for the fastest reply.</p>
             </div>
           </div>
 
@@ -525,16 +540,42 @@
   </footer>
 
   <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var name = document.getElementById('name').value.trim();
-      var phone = document.getElementById('phone').value.trim();
+    function sendQuoteEmail(form, successId) {
+      var data = new FormData(form);
+      var name = (data.get('name') || '').trim();
+      var phone = (data.get('phone') || '').trim();
+
       if (!name || !phone) {
         alert('Please enter your name and phone number.');
         return;
       }
-      this.style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
+
+      var service = data.get('service') || 'Website enquiry';
+      var subject = 'Casa4 Developments quote request - ' + service;
+      var body = [
+        'New quote request from casa4developments.co.uk',
+        '',
+        'Name: ' + name,
+        'Phone: ' + phone,
+        'Email: ' + (data.get('email') || 'Not provided'),
+        'Postcode / Area: ' + (data.get('postcode') || 'Not provided'),
+        'Service Required: ' + service,
+        'Ideal Timeframe: ' + (data.get('timeframe') || 'Not provided'),
+        '',
+        'Project Details:',
+        data.get('message') || 'Not provided',
+        '',
+        'Page: ' + window.location.href
+      ].join('\n');
+
+      window.location.href = 'mailto:info@casa4developments.co.uk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      form.style.display = 'none';
+      document.getElementById(successId).style.display = 'block';
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      sendQuoteEmail(this, 'formSuccess');
     });
   </script>
 
