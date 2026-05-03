@@ -8,7 +8,7 @@ Set these in the `casa4dev` Cloudflare Pages project:
 
 - `RESEND_API_KEY`: API key from Resend for sending lead emails.
 - `LEAD_TO_EMAIL`: where quote requests should go. Multiple recipients can be comma-separated, for example `casa4developments@outlook.com,alex@bryantdigitalsolutions.com`.
-- `LEAD_FROM_EMAIL`: verified sender, currently planned as `casa4developments@outlook.com`.
+- `LEAD_FROM_EMAIL`: verified sender. Use a Resend-verified domain sender such as `Casa4 Developments <leads@casa4developments.co.uk>` once DNS verification is complete.
 - `LEAD_WEBHOOK_URL`: optional CRM/Zapier/Make webhook. Use this instead of, or alongside, email delivery.
 
 The form endpoint is:
@@ -18,6 +18,8 @@ The form endpoint is:
 ```
 
 If neither `RESEND_API_KEY` nor `LEAD_WEBHOOK_URL` is configured, the frontend opens an email fallback instead of pretending the form was sent.
+
+Resend will reject unverified senders such as `casa4developments@outlook.com`. Add and verify `casa4developments.co.uk` in Resend, add the DNS records it provides, then use a sender on that domain.
 
 ## Google Ads / GA4
 

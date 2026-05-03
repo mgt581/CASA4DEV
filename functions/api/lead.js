@@ -19,20 +19,30 @@ function emailList(value, fallback) {
     .filter(Boolean);
 }
 
+function escapeHtml(value) {
+  return clean(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function buildEmailHtml(lead) {
   return `
     <h2>New Casa4 Developments quote request</h2>
     <table cellpadding="8" cellspacing="0" style="border-collapse:collapse;font-family:Arial,sans-serif;">
-      <tr><td><strong>Name</strong></td><td>${lead.name}</td></tr>
-      <tr><td><strong>Phone</strong></td><td>${lead.phone}</td></tr>
-      <tr><td><strong>Email</strong></td><td>${lead.email || "Not provided"}</td></tr>
-      <tr><td><strong>Postcode / Area</strong></td><td>${lead.postcode || "Not provided"}</td></tr>
-      <tr><td><strong>Service</strong></td><td>${lead.service || "Website enquiry"}</td></tr>
-      <tr><td><strong>Timeframe</strong></td><td>${lead.timeframe || "Not provided"}</td></tr>
-      <tr><td><strong>Page</strong></td><td>${lead.page || "Not provided"}</td></tr>
+      <tr><td><strong>Name</strong></td><td>${escapeHtml(lead.name)}</td></tr>
+      <tr><td><strong>Phone</strong></td><td>${escapeHtml(lead.phone)}</td></tr>
+      <tr><td><strong>Email</strong></td><td>${escapeHtml(lead.email || "Not provided")}</td></tr>
+      <tr><td><strong>Postcode / Area</strong></td><td>${escapeHtml(lead.postcode || "Not provided")}</td></tr>
+      <tr><td><strong>Service</strong></td><td>${escapeHtml(lead.service || "Website enquiry")}</td></tr>
+      <tr><td><strong>Timeframe</strong></td><td>${escapeHtml(lead.timeframe || "Not provided")}</td></tr>
+      <tr><td><strong>Source</strong></td><td>${escapeHtml(lead.source || "website")}</td></tr>
+      <tr><td><strong>Page</strong></td><td>${escapeHtml(lead.page || "Not provided")}</td></tr>
     </table>
     <h3>Project Details</h3>
-    <p>${(lead.message || "Not provided").replace(/\n/g, "<br>")}</p>
+    <p>${escapeHtml(lead.message || "Not provided").replace(/\n/g, "<br>")}</p>
   `;
 }
 
@@ -108,14 +118,31 @@ export async function onRequestPost(context) {
       return jsonResponse({ ok: false, error: "Please enter your name and phone number." }, 400);
     }
 
-    var delivered = await sendWithResend(env, lead);
-    if (!delivered) delivered = await sendToWebhook(env, lead);
+    var delivered = false;
+    var deliveryErrors = [];
+
+    try {
+      delivered = await sendWithResend(env, lead);
+    } catch (error) {
+      deliveryErrors.push(error.message);
+    }
 
     if (!delivered) {
+      try {
+        delivered = await sendToWebhook(env, lead);
+      } catch (error) {
+        deliveryErrors.push(error.message);
+      }
+    }
+
+    if (!delivered) {
+      if (deliveryErrors.length) console.error("Lead delivery failed:", deliveryErrors.join(" | "));
       return jsonResponse({
         ok: false,
-        error: "Lead capture is not configured yet. Add RESEND_API_KEY or LEAD_WEBHOOK_URL in Cloudflare Pages."
-      }, 503);
+        error: deliveryErrors.length
+          ? "Lead capture is configured but delivery failed. Please call or WhatsApp us."
+          : "Lead capture is not configured yet. Add RESEND_API_KEY or LEAD_WEBHOOK_URL in Cloudflare Pages."
+      }, deliveryErrors.length ? 502 : 503);
     }
 
     return jsonResponse({ ok: true, redirect: "/thank-you.html?service=" + encodeURIComponent(lead.service || "Website enquiry") }, 200);
