@@ -116,13 +116,16 @@
         return response.ok ? response.json() : {};
       })
       .then(function (config) {
-        if (config.gtmContainerId && !document.querySelector("script[src*='googletagmanager.com/gtm.js']")) {
+        var hasGtm = !!document.querySelector("script[src*='googletagmanager.com/gtm.js']");
+
+        if (config.gtmContainerId && !hasGtm) {
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
           loadScript("https://www.googletagmanager.com/gtm.js?id=" + encodeURIComponent(config.gtmContainerId));
+          hasGtm = true;
         }
 
-        if (config.gaMeasurementId) {
+        if (config.gaMeasurementId && !hasGtm) {
           window.dataLayer = window.dataLayer || [];
           window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
           window.gtag("js", new Date());
