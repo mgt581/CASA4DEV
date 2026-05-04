@@ -263,6 +263,43 @@
 
     .btn-back:hover { background: var(--accent); color: #fff; }
 
+    .area-links {
+      background: rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 0 0 56px;
+    }
+
+    .area-links h2 {
+      font-size: 1.55rem;
+      margin-bottom: 12px;
+    }
+
+    .area-links p {
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    .area-link-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .area-link-grid a {
+      background: rgba(0,0,0,0.18);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .area-link-grid a:hover {
+      background: var(--accent);
+    }
+
     /* FOOTER */
     .footer {
       background: var(--bg-dark);
@@ -307,6 +344,7 @@
         font-size: 0.9rem;
       }
       .services-grid { grid-template-columns: 1fr; }
+      .area-link-grid { grid-template-columns: 1fr; }
       .page-hero h1 { font-size: 2rem; }
     }
   </style>
@@ -464,6 +502,18 @@
             <h3>Extensions</h3>
             <p>Single and double storey extensions to expand your living space. We manage the full project from planning to final completion.</p>
             <a href="extensions.html" class="btn-cta">View Extensions</a>
+          </div>
+        </div>
+
+        <div class="area-links">
+          <h2>Popular Local Service Areas</h2>
+          <p>Casa4 Developments covers Fareham, Portsmouth, Southampton, Hampshire, Dorset and the South Coast. These local pages help customers find the right service near them.</p>
+          <div class="area-link-grid">
+            <a href="patios-portsmouth">Patio Installers Portsmouth</a>
+            <a href="patios-southampton">Patio Installers Southampton</a>
+            <a href="block-paving-portsmouth">Block Paving Portsmouth</a>
+            <a href="landscaping-fareham">Landscaping Fareham</a>
+            <a href="porcelain-driveways-poole">Porcelain Driveways Poole</a>
           </div>
         </div>
 
