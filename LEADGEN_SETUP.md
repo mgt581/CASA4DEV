@@ -74,6 +74,9 @@ The frontend pushes these events into `dataLayer` and `gtag` when available:
 - `quote_cta_click`
 - `phone_click`
 - `whatsapp_click`
+- `chat_open`
+- `chat_question`
+- `chat_lead`
 - `lead_form_submit_attempt`
 - `generate_lead`
 - `lead_thank_you_view`
@@ -83,9 +86,11 @@ Set `GTM_CONTAINER_ID` or `GA_MEASUREMENT_ID` in Cloudflare Pages to load Google
 Recommended conversions:
 
 - Primary: `generate_lead`
+- Primary: `chat_lead`
 - Primary: phone call from ads or website call tracking
 - Secondary: `whatsapp_click`
 - Secondary: `quote_cta_click`
+- Secondary: `chat_open`
 
 ## Call Tracking
 

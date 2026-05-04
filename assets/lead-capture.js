@@ -307,9 +307,223 @@
     });
   }
 
+  function addChatStyles() {
+    if (document.getElementById("casa4-chat-styles")) return;
+
+    var style = document.createElement("style");
+    style.id = "casa4-chat-styles";
+    style.textContent = [
+      ".casa4-chat{position:fixed;right:18px;bottom:18px;z-index:9999;font-family:Arial,sans-serif;color:#1f2933}",
+      ".casa4-chat *{box-sizing:border-box}",
+      ".casa4-chat-toggle{border:0;border-radius:999px;background:#5f9f4f;color:#fff;padding:14px 18px;font-weight:800;font-size:15px;box-shadow:0 12px 30px rgba(0,0,0,.24);cursor:pointer}",
+      ".casa4-chat-toggle:focus,.casa4-chat button:focus,.casa4-chat input:focus,.casa4-chat textarea:focus,.casa4-chat select:focus{outline:3px solid rgba(95,159,79,.35);outline-offset:2px}",
+      ".casa4-chat-panel{display:none;width:min(360px,calc(100vw - 28px));max-height:min(640px,calc(100vh - 96px));background:#fff;border:1px solid rgba(31,41,51,.14);border-radius:14px;box-shadow:0 20px 55px rgba(0,0,0,.28);overflow:hidden}",
+      ".casa4-chat.is-open .casa4-chat-panel{display:block}",
+      ".casa4-chat.is-open .casa4-chat-toggle{display:none}",
+      ".casa4-chat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;background:#2f3a43;color:#fff;padding:16px}",
+      ".casa4-chat-title{font-size:16px;font-weight:800;margin:0 0 4px}",
+      ".casa4-chat-subtitle{font-size:13px;line-height:1.35;opacity:.88;margin:0}",
+      ".casa4-chat-close{border:0;background:transparent;color:#fff;font-size:24px;line-height:1;cursor:pointer;padding:0}",
+      ".casa4-chat-body{padding:14px;overflow:auto;max-height:calc(min(640px,100vh - 96px) - 74px)}",
+      ".casa4-chat-msg{border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:14px;line-height:1.4}",
+      ".casa4-chat-msg.bot{background:#f1f5f0}",
+      ".casa4-chat-msg.user{background:#e8f1e4;margin-left:34px}",
+      ".casa4-chat-options{display:grid;gap:8px;margin:10px 0 12px}",
+      ".casa4-chat-option{border:1px solid rgba(95,159,79,.4);background:#fff;color:#23411f;border-radius:999px;padding:10px 12px;text-align:left;font-weight:700;cursor:pointer}",
+      ".casa4-chat-option:hover{background:#f1f8ee}",
+      ".casa4-chat-form{display:grid;gap:9px;margin-top:12px}",
+      ".casa4-chat-form label{font-size:12px;font-weight:800;color:#334155}",
+      ".casa4-chat-form input,.casa4-chat-form textarea,.casa4-chat-form select{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:10px;font:inherit;font-size:14px}",
+      ".casa4-chat-form textarea{min-height:72px;resize:vertical}",
+      ".casa4-chat-submit{border:0;border-radius:999px;background:#5f9f4f;color:#fff;padding:12px 14px;font-weight:800;cursor:pointer}",
+      ".casa4-chat-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}",
+      ".casa4-chat-link{display:flex;justify-content:center;align-items:center;text-decoration:none;border-radius:999px;padding:10px 8px;font-weight:800;font-size:13px;background:#2f3a43;color:#fff}",
+      ".casa4-chat-link.alt{background:#5f9f4f}",
+      ".casa4-chat-status{display:none;margin:8px 0 0;font-size:13px;font-weight:700}",
+      "@media(max-width:480px){.casa4-chat{right:12px;bottom:12px}.casa4-chat-panel{width:calc(100vw - 24px)}.casa4-chat-actions{grid-template-columns:1fr}}"
+    ].join("");
+    document.head.appendChild(style);
+  }
+
+  function chatMessage(text, type) {
+    var message = document.createElement("div");
+    message.className = "casa4-chat-msg " + (type || "bot");
+    message.textContent = text;
+    return message;
+  }
+
+  function createOption(label, action) {
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "casa4-chat-option";
+    button.textContent = label;
+    button.addEventListener("click", action);
+    return button;
+  }
+
+  function buildChatLeadMessage(reason, userMessage) {
+    return [
+      "Chat assistant lead request",
+      "",
+      "Visitor selected: " + reason,
+      userMessage ? "Question / details: " + userMessage : "",
+      "",
+      "Please contact this person about their project."
+    ].filter(Boolean).join("\n");
+  }
+
+  async function submitChatLead(form, reason) {
+    var data = new FormData(form);
+    var payload = Object.assign({
+      name: cleanChatValue(data.get("name")),
+      phone: cleanChatValue(data.get("phone")),
+      email: cleanChatValue(data.get("email")),
+      postcode: cleanChatValue(data.get("postcode")),
+      service: cleanChatValue(data.get("service")) || "Chat enquiry",
+      timeframe: "Chat callback request",
+      message: buildChatLeadMessage(reason, cleanChatValue(data.get("message"))),
+      source: "chat-widget",
+      page: window.location.href
+    }, getAttribution());
+
+    if (!payload.name || !payload.phone) {
+      throw new Error("Please add your name and phone number.");
+    }
+
+    var response = await fetch("/api/lead", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    var result = await response.json();
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || "Chat lead capture is not configured.");
+    }
+
+    pushEvent("chat_lead", {
+      service: payload.service,
+      form_source: "chat-widget",
+      source: "chat-widget",
+      chat_reason: reason
+    });
+  }
+
+  function cleanChatValue(value) {
+    return String(value || "").trim();
+  }
+
+  function showChatForm(messages, reason) {
+    var existing = messages.querySelector(".casa4-chat-form");
+    if (existing) existing.remove();
+
+    var form = document.createElement("form");
+    form.className = "casa4-chat-form";
+    form.innerHTML = [
+      "<label>Name *</label><input name=\"name\" autocomplete=\"name\" required>",
+      "<label>Phone *</label><input name=\"phone\" type=\"tel\" autocomplete=\"tel\" required>",
+      "<label>Email</label><input name=\"email\" type=\"email\" autocomplete=\"email\">",
+      "<label>Postcode / area</label><input name=\"postcode\" autocomplete=\"postal-code\" placeholder=\"e.g. Fareham, PO16\">",
+      "<label>Service</label><select name=\"service\"><option>Driveways</option><option>Patios</option><option>Landscaping</option><option>Porcelain driveways</option><option>Outdoor kitchens</option><option>Fencing or decking</option><option>General enquiry</option></select>",
+      "<label>Question or project details</label><textarea name=\"message\" placeholder=\"Tell us what you need help with\"></textarea>",
+      "<button class=\"casa4-chat-submit\" type=\"submit\">Send To Human Advisor</button>",
+      "<p class=\"casa4-chat-status\" data-chat-status></p>"
+    ].join("");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      var button = form.querySelector("button[type='submit']");
+      var status = form.querySelector("[data-chat-status]");
+      button.disabled = true;
+      button.textContent = "Sending...";
+      status.style.display = "none";
+
+      try {
+        await submitChatLead(form, reason);
+        messages.appendChild(chatMessage("Thanks, that has been sent. A human advisor can follow up with you shortly.", "bot"));
+        form.remove();
+      } catch (error) {
+        status.style.display = "block";
+        status.style.color = "#b91c1c";
+        status.textContent = error.message;
+        button.disabled = false;
+        button.textContent = "Send To Human Advisor";
+      }
+    });
+
+    messages.appendChild(form);
+    form.querySelector("input[name='name']").focus();
+  }
+
+  function addChatWidget() {
+    if (document.getElementById("casa4-chat")) return;
+    if (window.location.pathname.indexOf("/privacy") === 0) return;
+
+    addChatStyles();
+
+    var widget = document.createElement("div");
+    widget.id = "casa4-chat";
+    widget.className = "casa4-chat";
+    widget.innerHTML = [
+      "<button class=\"casa4-chat-toggle\" type=\"button\" aria-expanded=\"false\">Need help?</button>",
+      "<section class=\"casa4-chat-panel\" aria-label=\"Casa4 chat assistant\">",
+      "<div class=\"casa4-chat-head\"><div><p class=\"casa4-chat-title\">Casa4 Assistant</p><p class=\"casa4-chat-subtitle\">Quick answers, quotes and human callback requests.</p></div><button class=\"casa4-chat-close\" type=\"button\" aria-label=\"Close chat\">&times;</button></div>",
+      "<div class=\"casa4-chat-body\"><div data-chat-messages></div><div class=\"casa4-chat-options\" data-chat-options></div><div class=\"casa4-chat-actions\"><a class=\"casa4-chat-link\" href=\"tel:01489290012\">Call</a><a class=\"casa4-chat-link alt\" href=\"https://wa.me/447900281011\">WhatsApp</a></div></div>",
+      "</section>"
+    ].join("");
+
+    document.body.appendChild(widget);
+
+    var toggle = widget.querySelector(".casa4-chat-toggle");
+    var close = widget.querySelector(".casa4-chat-close");
+    var messages = widget.querySelector("[data-chat-messages]");
+    var options = widget.querySelector("[data-chat-options]");
+
+    function openChat() {
+      widget.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+      pushEvent("chat_open", { source: "chat-widget" });
+    }
+
+    function closeChat() {
+      widget.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
+    function answer(label, text, wantsForm) {
+      messages.appendChild(chatMessage(label, "user"));
+      messages.appendChild(chatMessage(text, "bot"));
+      pushEvent("chat_question", { chat_question: label, source: "chat-widget" });
+      if (wantsForm) {
+        showChatForm(messages, label);
+      }
+      messages.parentNode.scrollTop = messages.parentNode.scrollHeight;
+    }
+
+    messages.appendChild(chatMessage("Hi, I can help with services, areas, finance and free quote requests. For anything detailed, send it to a human advisor.", "bot"));
+    options.appendChild(createOption("Get a free quote", function () {
+      answer("Get a free quote", "No problem. Send your details and a human advisor can follow up about the project.", true);
+    }));
+    options.appendChild(createOption("Do you cover my area?", function () {
+      answer("Do you cover my area?", "Casa4 covers Fareham, Portsmouth, Southampton, Hampshire and nearby areas. For Poole or Dorset porcelain enquiries, send the postcode and the team can confirm.", true);
+    }));
+    options.appendChild(createOption("What services do you do?", function () {
+      answer("What services do you do?", "Main services include driveways, block paving, patios, porcelain surfaces, landscaping, outdoor kitchens, fencing, decking, pergolas, kitchens, bathrooms and extensions.", false);
+    }));
+    options.appendChild(createOption("Finance options", function () {
+      answer("Finance options", "The site advertises 0% finance options. A human advisor can confirm what is available for your project and quote size.", true);
+    }));
+    options.appendChild(createOption("Wait for a human advisor", function () {
+      answer("Wait for a human advisor", "Sure. Leave your contact details and what you need help with.", true);
+    }));
+
+    toggle.addEventListener("click", openChat);
+    close.addEventListener("click", closeChat);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     loadTrackingConfig();
     prefillServiceFromUrl();
+    addChatWidget();
     trackClicks();
     if (!pageTracked) {
       pageTracked = true;

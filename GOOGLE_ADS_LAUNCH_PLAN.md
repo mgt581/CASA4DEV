@@ -9,12 +9,14 @@ Generate quote enquiries for high-value outdoor work across the South Coast, wit
 Primary conversion:
 
 - `generate_lead`
+- `chat_lead`
 
 Secondary conversions:
 
 - `phone_click`
 - `whatsapp_click`
 - `quote_cta_click`
+- `chat_open`
 
 ## Pre-Launch Checklist
 
@@ -22,6 +24,7 @@ Secondary conversions:
 - GTM container `GTM-NCRRT42P` published.
 - Google Ads linked to GA4.
 - `generate_lead` imported into Google Ads as the primary lead conversion.
+- `chat_lead` imported into Google Ads as another primary lead conversion.
 - Phone and WhatsApp clicks imported as secondary conversions.
 - Location setting uses people **in or regularly in** the target area, not people merely interested in it.
 - Final URLs use service-specific landing pages.
