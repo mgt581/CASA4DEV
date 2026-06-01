@@ -1,0 +1,14 @@
+/images/*
+  Cache-Control: public, max-age=2592000, immutable
+
+/gallery-content/*
+  Cache-Control: public, max-age=2592000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=604800
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
