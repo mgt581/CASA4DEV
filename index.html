@@ -668,13 +668,33 @@
       .trust-grid { grid-template-columns: 1fr; }
       .hero-card { margin: 0; }
       .hero-image { min-height: 540px; }
-      .hero-overlay { left: 20px; top: 20px; width: calc(100% - 40px); }
+      .hero-overlay {
+        left: 20px;
+        top: 20px;
+        bottom: 24px;
+        width: calc(100% - 40px);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
       .hero-copy { max-width: 310px; }
       .hero-copy h1 { font-size: 1.9rem; }
       .hero-copy p { max-width: 300px; font-size: 0.9rem; }
-      .finance-badge { margin-bottom: 22px; padding: 14px 18px; max-width: 292px; }
-      .finance-badge strong { font-size: 1.5rem; }
-      .hero-actions { max-width: 260px; }
+      .finance-badge {
+        order: 3;
+        align-self: flex-start;
+        margin: 14px 0 0;
+        padding: 11px 15px;
+        max-width: 240px;
+        border-radius: 15px;
+        font-size: 0.84rem;
+      }
+      .finance-badge strong { font-size: 1.28rem; }
+      .hero-actions {
+        order: 2;
+        max-width: 260px;
+        margin-top: auto;
+      }
       .overview-grid { grid-template-columns: 1fr; }
       .overview-img-wrap { width: 180px; height: 180px; }
       .contact-us-layout { grid-template-columns: 1fr; }
