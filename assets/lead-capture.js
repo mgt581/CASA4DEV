@@ -50,8 +50,84 @@
     return value;
   }
 
+  function getStoredJson(storage, key) {
+    try {
+      return JSON.parse(storage.getItem(key) || "{}") || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function setStoredJson(storage, key, value) {
+    try {
+      storage.setItem(key, JSON.stringify(value));
+    } catch (error) {}
+  }
+
+  function hostnameFromUrl(value) {
+    try {
+      return new URL(value).hostname.replace(/^www\./, "");
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function hasCampaignParams(params) {
+    return ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid", "msclkid"].some(function (key) {
+      return !!params.get(key);
+    });
+  }
+
+  function inferTraffic(params, referrer) {
+    if (params.get("gclid")) return { source: "google", medium: "cpc", campaign: params.get("utm_campaign") || "" };
+    if (params.get("msclkid")) return { source: "microsoft", medium: "cpc", campaign: params.get("utm_campaign") || "" };
+    if (params.get("fbclid")) return { source: "facebook", medium: "social", campaign: params.get("utm_campaign") || "" };
+    if (params.get("utm_source")) {
+      return {
+        source: params.get("utm_source") || "",
+        medium: params.get("utm_medium") || "",
+        campaign: params.get("utm_campaign") || ""
+      };
+    }
+
+    var host = hostnameFromUrl(referrer);
+    if (!host) return { source: "direct", medium: "none", campaign: "" };
+    if (/(^|\.)google\./.test(host)) return { source: "google", medium: "organic", campaign: "" };
+    if (/(^|\.)bing\./.test(host)) return { source: "bing", medium: "organic", campaign: "" };
+    if (/(^|\.)facebook\.|(^|\.)instagram\./.test(host)) return { source: host, medium: "social", campaign: "" };
+    return { source: host, medium: "referral", campaign: "" };
+  }
+
+  function getFirstAttribution(params) {
+    var key = "casa4_first_attribution";
+    var stored = getStoredJson(window.localStorage, key);
+    if (stored && stored.first_page) return stored;
+
+    var referrer = document.referrer || "";
+    var inferred = inferTraffic(params, referrer);
+    stored = {
+      first_page: window.location.href,
+      first_referrer: referrer,
+      first_utm_source: params.get("utm_source") || inferred.source,
+      first_utm_medium: params.get("utm_medium") || inferred.medium,
+      first_utm_campaign: params.get("utm_campaign") || inferred.campaign,
+      first_utm_term: params.get("utm_term") || "",
+      first_utm_content: params.get("utm_content") || "",
+      first_gclid: params.get("gclid") || "",
+      first_fbclid: params.get("fbclid") || "",
+      first_msclkid: params.get("msclkid") || "",
+      first_seen_at: new Date().toISOString()
+    };
+    setStoredJson(window.localStorage, key, stored);
+    return stored;
+  }
+
   function getAttribution() {
     var params = new URLSearchParams(window.location.search);
+    var firstAttribution = getFirstAttribution(params);
+    var currentTraffic = inferTraffic(params, document.referrer || "");
+    var hasCurrentCampaign = hasCampaignParams(params);
+
     return {
       page: window.location.href,
       landing_page: getLandingPage(),
@@ -64,6 +140,20 @@
       gclid: params.get("gclid") || "",
       fbclid: params.get("fbclid") || "",
       msclkid: params.get("msclkid") || "",
+      traffic_source: hasCurrentCampaign ? currentTraffic.source : firstAttribution.first_utm_source || currentTraffic.source,
+      traffic_medium: hasCurrentCampaign ? currentTraffic.medium : firstAttribution.first_utm_medium || currentTraffic.medium,
+      traffic_campaign: hasCurrentCampaign ? currentTraffic.campaign : firstAttribution.first_utm_campaign || currentTraffic.campaign,
+      first_page: firstAttribution.first_page || "",
+      first_referrer: firstAttribution.first_referrer || "",
+      first_utm_source: firstAttribution.first_utm_source || "",
+      first_utm_medium: firstAttribution.first_utm_medium || "",
+      first_utm_campaign: firstAttribution.first_utm_campaign || "",
+      first_utm_term: firstAttribution.first_utm_term || "",
+      first_utm_content: firstAttribution.first_utm_content || "",
+      first_gclid: firstAttribution.first_gclid || "",
+      first_fbclid: firstAttribution.first_fbclid || "",
+      first_msclkid: firstAttribution.first_msclkid || "",
+      first_seen_at: firstAttribution.first_seen_at || "",
       session_id: getSessionId(),
       client_id: getClientId()
     };
@@ -88,11 +178,17 @@
   }
 
   function pushEvent(name, params) {
-    var eventPayload = Object.assign({}, getAttribution(), params || {}, { event_name: name });
+    var cleanParams = Object.assign({}, params || {});
+    if (cleanParams.source && !cleanParams.event_source && !cleanParams.form_source) {
+      cleanParams.event_source = cleanParams.source;
+      delete cleanParams.source;
+    }
+
+    var eventPayload = Object.assign({}, getAttribution(), cleanParams, { event_name: name });
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: name }, params || {}));
+    window.dataLayer.push(Object.assign({ event: name }, cleanParams));
     if (typeof window.gtag === "function") {
-      window.gtag("event", name, params || {});
+      window.gtag("event", name, cleanParams);
     }
     storeLeadEvent(eventPayload);
   }
@@ -296,6 +392,26 @@
       });
     });
 
+    document.querySelectorAll("a[href^='sms:']").forEach(function (link) {
+      link.addEventListener("click", function () {
+        pushEvent("sms_click", {
+          link_text: link.textContent.trim(),
+          link_url: link.href,
+          sms_number: link.getAttribute("href").replace(/^sms:/, "").split("?")[0]
+        });
+      });
+    });
+
+    document.querySelectorAll("a[href^='mailto:']").forEach(function (link) {
+      link.addEventListener("click", function () {
+        pushEvent("email_click", {
+          link_text: link.textContent.trim(),
+          link_url: link.href,
+          email_address: link.getAttribute("href").replace(/^mailto:/, "").split("?")[0]
+        });
+      });
+    });
+
     document.querySelectorAll("a[href*='contact.html']").forEach(function (link) {
       link.addEventListener("click", function () {
         pushEvent("quote_cta_click", {
@@ -336,7 +452,7 @@
       ".casa4-chat-form input,.casa4-chat-form textarea,.casa4-chat-form select{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:10px;font:inherit;font-size:14px}",
       ".casa4-chat-form textarea{min-height:72px;resize:vertical}",
       ".casa4-chat-submit{border:0;border-radius:999px;background:#5f9f4f;color:#fff;padding:12px 14px;font-weight:800;cursor:pointer}",
-      ".casa4-chat-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}",
+      ".casa4-chat-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}",
       ".casa4-chat-link{display:flex;justify-content:center;align-items:center;text-decoration:none;border-radius:999px;padding:10px 8px;font-weight:800;font-size:13px;background:#2f3a43;color:#fff}",
       ".casa4-chat-link.alt{background:#5f9f4f}",
       ".casa4-chat-status{display:none;margin:8px 0 0;font-size:13px;font-weight:700}",
@@ -467,7 +583,7 @@
       "<button class=\"casa4-chat-toggle\" type=\"button\" aria-expanded=\"false\">Need help?</button>",
       "<section class=\"casa4-chat-panel\" aria-label=\"Casa4 chat assistant\">",
       "<div class=\"casa4-chat-head\"><div><p class=\"casa4-chat-title\">Casa4 Assistant</p><p class=\"casa4-chat-subtitle\">Quick answers, quotes and human callback requests.</p></div><button class=\"casa4-chat-close\" type=\"button\" aria-label=\"Close chat\">&times;</button></div>",
-      "<div class=\"casa4-chat-body\"><div data-chat-messages></div><div class=\"casa4-chat-options\" data-chat-options></div><div class=\"casa4-chat-actions\"><a class=\"casa4-chat-link\" href=\"tel:01489290012\">Call</a><a class=\"casa4-chat-link alt\" href=\"https://wa.me/447900281011\">WhatsApp</a></div></div>",
+      "<div class=\"casa4-chat-body\"><div data-chat-messages></div><div class=\"casa4-chat-options\" data-chat-options></div><div class=\"casa4-chat-actions\"><a class=\"casa4-chat-link\" href=\"tel:01489290012\">Call</a><a class=\"casa4-chat-link alt\" href=\"https://wa.me/447900281011\">WhatsApp</a><a class=\"casa4-chat-link\" href=\"sms:07900281011\">Text</a></div></div>",
       "</section>"
     ].join("");
 

@@ -1,0 +1,37 @@
+ALTER TABLE leads ADD COLUMN traffic_source TEXT;
+ALTER TABLE leads ADD COLUMN traffic_medium TEXT;
+ALTER TABLE leads ADD COLUMN traffic_campaign TEXT;
+ALTER TABLE leads ADD COLUMN first_page TEXT;
+ALTER TABLE leads ADD COLUMN first_referrer TEXT;
+ALTER TABLE leads ADD COLUMN first_utm_source TEXT;
+ALTER TABLE leads ADD COLUMN first_utm_medium TEXT;
+ALTER TABLE leads ADD COLUMN first_utm_campaign TEXT;
+ALTER TABLE leads ADD COLUMN first_utm_term TEXT;
+ALTER TABLE leads ADD COLUMN first_utm_content TEXT;
+ALTER TABLE leads ADD COLUMN first_gclid TEXT;
+ALTER TABLE leads ADD COLUMN first_fbclid TEXT;
+ALTER TABLE leads ADD COLUMN first_msclkid TEXT;
+ALTER TABLE leads ADD COLUMN first_seen_at TEXT;
+
+ALTER TABLE lead_events ADD COLUMN traffic_source TEXT;
+ALTER TABLE lead_events ADD COLUMN traffic_medium TEXT;
+ALTER TABLE lead_events ADD COLUMN traffic_campaign TEXT;
+ALTER TABLE lead_events ADD COLUMN first_page TEXT;
+ALTER TABLE lead_events ADD COLUMN first_referrer TEXT;
+ALTER TABLE lead_events ADD COLUMN first_utm_source TEXT;
+ALTER TABLE lead_events ADD COLUMN first_utm_medium TEXT;
+ALTER TABLE lead_events ADD COLUMN first_utm_campaign TEXT;
+ALTER TABLE lead_events ADD COLUMN first_utm_term TEXT;
+ALTER TABLE lead_events ADD COLUMN first_utm_content TEXT;
+ALTER TABLE lead_events ADD COLUMN first_gclid TEXT;
+ALTER TABLE lead_events ADD COLUMN first_fbclid TEXT;
+ALTER TABLE lead_events ADD COLUMN first_msclkid TEXT;
+ALTER TABLE lead_events ADD COLUMN first_seen_at TEXT;
+ALTER TABLE lead_events ADD COLUMN event_source TEXT;
+ALTER TABLE lead_events ADD COLUMN form_source TEXT;
+ALTER TABLE lead_events ADD COLUMN chat_question TEXT;
+ALTER TABLE lead_events ADD COLUMN sms_number TEXT;
+ALTER TABLE lead_events ADD COLUMN email_address TEXT;
+
+CREATE INDEX IF NOT EXISTS idx_lead_events_traffic_source ON lead_events (traffic_source);
+CREATE INDEX IF NOT EXISTS idx_leads_traffic_source ON leads (traffic_source);

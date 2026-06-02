@@ -71,14 +71,18 @@ Resend will reject unverified senders such as `casa4developments@outlook.com`. A
 
 The frontend pushes these events into `dataLayer` and `gtag` when available:
 
+- `page_view`
 - `quote_cta_click`
 - `phone_click`
+- `sms_click`
+- `email_click`
 - `whatsapp_click`
 - `chat_open`
 - `chat_question`
 - `chat_lead`
 - `lead_form_submit_attempt`
 - `generate_lead`
+- `lead_delivery_failed`
 - `lead_thank_you_view`
 
 Set `GTM_CONTAINER_ID` or `GA_MEASUREMENT_ID` in Cloudflare Pages to load Google tracking. Then map these events in GA4 and Google Ads conversions.
@@ -91,6 +95,51 @@ Recommended conversions:
 - Secondary: `whatsapp_click`
 - Secondary: `quote_cta_click`
 - Secondary: `chat_open`
+
+## Lead Proof And Attribution
+
+The site stores two proof exports:
+
+```text
+/api/leads/export?token=YOUR_LEADS_EXPORT_TOKEN
+/api/lead-events/export?token=YOUR_LEADS_EXPORT_TOKEN
+```
+
+Use the first export for completed form/chat leads. Use the second export for supporting lead activity such as phone clicks, WhatsApp clicks, email clicks, SMS clicks, quote CTA clicks, chat opens and thank-you page views.
+
+Each record now includes:
+
+- `traffic_source`, `traffic_medium`, `traffic_campaign`: best available source for the current visit.
+- `first_utm_source`, `first_utm_medium`, `first_utm_campaign`: original visitor acquisition source.
+- `gclid`, `msclkid`, `fbclid`: ad click identifiers when present.
+- `landing_page`, `first_page`, `page`: where the visitor first landed and where the lead action happened.
+- `event_source`, `form_source`, `chat_question`: what part of the site generated the action.
+- `phone_number`, `whatsapp_number`, `sms_number`, `email_address`: destination used for click-to-contact events.
+
+Recommended Google Business Profile website URL:
+
+```text
+https://casa4developments.co.uk/?utm_source=google&utm_medium=organic&utm_campaign=gbp
+```
+
+Recommended Google Ads final URL for the porcelain draft campaign:
+
+```text
+https://casa4developments.co.uk/porcelain?utm_source=google&utm_medium=cpc&utm_campaign=porcelain_driveways_patios&utm_content=search_ad
+```
+
+If Google auto-tagging is enabled, `gclid` will also be captured and exported.
+
+## Client Lead Checks
+
+To prove whether leads are coming in, review these sources weekly:
+
+- Cloudflare CSV export for submitted leads.
+- Cloudflare event export for phone, WhatsApp, email, SMS and quote clicks.
+- Google Business Profile Performance for calls, messages and website clicks.
+- Google Search Console for organic search clicks.
+- GA4 key events for `generate_lead`, `phone_click`, `whatsapp_click`, `email_click`, `sms_click` and `chat_lead`.
+- Client phone log and WhatsApp Business inbox, matched against event timestamps.
 
 ## Call Tracking
 
