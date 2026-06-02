@@ -221,11 +221,12 @@
           hasGtm = true;
         }
 
-        if (config.gaMeasurementId && !hasGtm) {
+        var hasGtag = !!document.querySelector("script[src*='googletagmanager.com/gtag/js']");
+        if (config.gaMeasurementId && !hasGtag) {
           window.dataLayer = window.dataLayer || [];
           window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
           window.gtag("js", new Date());
-          window.gtag("config", config.gaMeasurementId);
+          window.gtag("config", config.gaMeasurementId, { send_page_view: false });
           loadScript("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(config.gaMeasurementId));
         }
 
