@@ -250,10 +250,15 @@
       margin-bottom: 60px;
     }
 
-    .content-grid img {
+    .content-images {
+      display: grid;
+      gap: 18px;
+    }
+
+    .content-images img {
       border-radius: 14px;
       width: 100%;
-      height: 340px;
+      height: 220px;
       object-fit: cover;
     }
 
@@ -423,7 +428,11 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="images/outdoorkitchens.png" alt="Outdoor kitchen installation by Casa4 Developments" />
+          <div class="content-images">
+            <img src="gallery-content/outdoor-kitchen-covered.jpg" alt="Covered outdoor kitchen with built-in barbecues and stone worktops" />
+            <img src="gallery-content/outdoor-kitchen-pizza-oven.jpg" alt="Outdoor kitchen with pizza oven and built-in barbecue" />
+            <img src="gallery-content/outdoor-kitchen-lighting.jpg" alt="Covered outdoor kitchen with integrated lighting" />
+          </div>
           <div class="content-text">
             <h2>Al-Fresco Living Made Easy</h2>
             <p>An outdoor kitchen transforms the way you entertain and spend time in your garden. From built-in BBQ stations and pizza ovens to full kitchen setups with worktops, sinks, and storage, we design and build bespoke outdoor kitchens that are both functional and stunning.</p>
