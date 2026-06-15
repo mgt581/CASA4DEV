@@ -261,10 +261,15 @@
       margin-bottom: 60px;
     }
 
-    .content-grid img {
+    .content-images {
+      display: grid;
+      gap: 18px;
+    }
+
+    .content-images img {
       border-radius: 14px;
       width: 100%;
-      height: 340px;
+      height: 250px;
       object-fit: cover;
     }
 
@@ -462,7 +467,10 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="images/pergolas.png" alt="Pergola installation by Casa4 Developments" />
+          <div class="content-images">
+            <img src="gallery-content/oak-pergola.jpg" alt="Bespoke oak pergola built over a natural stone patio" />
+            <img src="gallery-content/timber-pergola-patio.jpg" alt="Timber pergola covering a landscaped patio seating area" />
+          </div>
           <div class="content-text">
             <h2>Transform Your Outdoor Space</h2>
             <p>A beautifully crafted pergola is the perfect way to extend your living space into the garden. Whether you're looking for a sheltered dining area, a shaded retreat, or a stylish garden feature, our bespoke pergolas are designed and built to suit your exact requirements.</p>
