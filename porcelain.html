@@ -251,11 +251,28 @@
       margin-bottom: 60px;
     }
 
+    .content-grid.full-graphic {
+      grid-template-columns: minmax(0, 900px);
+      justify-content: center;
+      align-items: start;
+      gap: 34px;
+    }
+
     .content-grid img {
       border-radius: 14px;
       width: 100%;
       height: 340px;
       object-fit: cover;
+    }
+
+    .content-grid.full-graphic img {
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+    }
+
+    .content-grid.full-graphic .content-text {
+      max-width: 860px;
     }
 
     .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
@@ -423,7 +440,7 @@
     <section class="content-section">
       <div class="container">
 
-        <div class="content-grid">
+        <div class="content-grid full-graphic">
           <img src="images/porcelain-advantages-driveway.png" alt="Porcelain driveway advantages graphic by Casa4 Developments" />
           <div class="content-text">
             <h2>Premium Porcelain Surfaces</h2>
