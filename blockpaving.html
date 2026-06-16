@@ -251,11 +251,22 @@
       margin-bottom: 60px;
     }
 
-    .content-grid img {
+    .service-image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .service-image-grid img {
       border-radius: 14px;
       width: 100%;
-      height: 340px;
+      height: 210px;
       object-fit: cover;
+    }
+
+    .service-image-grid img:first-child {
+      grid-column: 1 / -1;
+      height: 260px;
     }
 
     .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
@@ -343,6 +354,8 @@
         font-size: 0.9rem;
       }
       .content-grid { grid-template-columns: 1fr; }
+      .service-image-grid img,
+      .service-image-grid img:first-child { height: 260px; }
       .features-grid { grid-template-columns: 1fr 1fr; }
       .lead-proof-strip { grid-template-columns: 1fr 1fr; }
       .process-steps { grid-template-columns: 1fr; }
@@ -388,6 +401,7 @@
             <a href="fencing.html">Fencing</a>
             <a href="kitchenrenovations.html">Kitchen Renovations</a>
             <a href="bathroomrefits.html">Bathroom Refits</a>
+            <a href="conservatories.html">Conservatories</a>
             <a href="extensions.html">Extensions</a>
           </div>
         </div>
@@ -423,7 +437,11 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="images/blockpaving.png" alt="Block paving installation by Casa4 Developments" />
+          <div class="service-image-grid" aria-label="Block paving project examples">
+            <img src="images/blockpaving.png" alt="Block paving installation by Casa4 Developments" />
+            <img src="images/block-paving-driveway-front.png" alt="Block paving driveway with landscaped borders outside a bungalow" />
+            <img src="images/block-paving-driveway-gates.png" alt="Block paving driveway with entrance gates and garage access" />
+          </div>
           <div class="content-text">
             <h2>Stunning Block Paving Driveways</h2>
             <p>Block paving is one of the most popular choices for driveways in the UK, and for good reason. It's versatile, durable, and when installed correctly, it creates a beautiful entrance to your home that adds real value to your property.</p>
