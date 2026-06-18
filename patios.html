@@ -258,6 +258,15 @@
       object-fit: cover;
     }
 
+    .patio-gallery {
+      display: grid;
+      gap: 16px;
+    }
+
+    .patio-gallery img {
+      height: 240px;
+    }
+
     .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
 
     .content-text p {
@@ -424,7 +433,10 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="images/patio.png" alt="Patio installation by Casa4 Developments" />
+          <div class="patio-gallery">
+            <img src="images/patio-natural-stone-courtyard.jpg" alt="Natural stone courtyard patio with brick steps and integrated lighting" loading="lazy" decoding="async" />
+            <img src="images/patio-natural-stone-side.jpg" alt="Natural stone patio installed along the side of a house" loading="lazy" decoding="async" />
+          </div>
           <div class="content-text">
             <h2>Your Perfect Outdoor Retreat</h2>
             <p>A beautifully designed patio transforms your garden into an outdoor living space you'll want to use all year round. Whether you prefer the elegance of porcelain, the warmth of natural stone, or the classic look of block paving, we design and install patios that perfectly complement your home and garden.</p>
