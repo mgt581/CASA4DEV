@@ -138,8 +138,7 @@
       color: #fff;
     }
 
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown:focus-within .nav-dropdown-menu {
+    .nav-dropdown.is-open .nav-dropdown-menu {
       display: block;
     }
 
@@ -251,11 +250,28 @@
       margin-bottom: 60px;
     }
 
+    .content-grid.full-graphic {
+      grid-template-columns: minmax(0, 900px);
+      justify-content: center;
+      align-items: start;
+      gap: 34px;
+    }
+
     .content-grid img {
       border-radius: 14px;
       width: 100%;
       height: 340px;
       object-fit: cover;
+    }
+
+    .content-grid.full-graphic img {
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+    }
+
+    .content-grid.full-graphic .content-text {
+      max-width: 860px;
     }
 
     .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
@@ -376,7 +392,7 @@
       <nav class="nav">
         <a href="index.html">HOME</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-dropdown-toggle active">SERVICES ▾</a>
+          <a href="services.html" class="nav-dropdown-toggle active" aria-expanded="false">SERVICES ▾</a>
           <div class="nav-dropdown-menu">
             <a href="pergolas.html">Pergolas</a>
             <a href="outdoorkitchens.html">Outdoor Kitchens</a>
@@ -386,9 +402,9 @@
             <a href="landscaping.html">Landscaping</a>
             <a href="decking.html">Decking</a>
             <a href="fencing.html">Fencing</a>
-            <a href="artificialgrass.html">Artificial Grass</a>
             <a href="kitchenrenovations.html">Kitchen Renovations</a>
             <a href="bathroomrefits.html">Bathroom Refits</a>
+            <a href="conservatories.html">Conservatories</a>
             <a href="extensions.html">Extensions</a>
           </div>
         </div>
@@ -423,8 +439,8 @@
     <section class="content-section">
       <div class="container">
 
-        <div class="content-grid">
-          <img src="images/porcelain driveway.png" alt="Porcelain driveway installation by Casa4 Developments" />
+        <div class="content-grid full-graphic">
+          <img src="images/porcelain-advantages-driveway.png" alt="Porcelain driveway advantages graphic by Casa4 Developments" />
           <div class="content-text">
             <h2>Premium Porcelain Surfaces</h2>
             <p>Porcelain is one of the most sought-after materials for driveways and patios, offering an unbeatable combination of elegance, strength, and low maintenance. Our expert team installs porcelain to the highest standard, ensuring a flawless finish that enhances your property's kerb appeal.</p>
@@ -501,5 +517,6 @@
   </footer>
 
   <script src="assets/lead-capture.js"></script>
+  <script src="assets/nav-dropdown.js"></script>
 </body>
 </html>

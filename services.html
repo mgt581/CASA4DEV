@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <link rel="icon" type="image/png" href="images/apple-touch-icon.png" />
   <title>Home Improvement Services Fareham | Casa4 Developments</title>
-  <meta name="description" content="Explore Casa4 Developments services in Fareham and Hampshire, including driveways, patios, landscaping, fencing, decking, kitchens, bathrooms and extensions." />
+  <meta name="description" content="Explore Casa4 Developments services in Fareham and Hampshire, including driveways, patios, landscaping, fencing, decking, kitchens, bathrooms and more." />
   <link rel="canonical" href="https://casa4developments.co.uk/services" />
 
   <style>
@@ -143,8 +143,7 @@
       color: #fff;
     }
 
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown:focus-within .nav-dropdown-menu {
+    .nav-dropdown.is-open .nav-dropdown-menu {
       display: block;
     }
 
@@ -367,7 +366,7 @@
       <nav class="nav">
         <a href="index.html">HOME</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-dropdown-toggle active">SERVICES ▾</a>
+          <a href="services.html" class="nav-dropdown-toggle active" aria-expanded="false">SERVICES ▾</a>
           <div class="nav-dropdown-menu">
             <a href="pergolas.html">Pergolas</a>
             <a href="outdoorkitchens.html">Outdoor Kitchens</a>
@@ -377,10 +376,9 @@
             <a href="landscaping.html">Landscaping</a>
             <a href="decking.html">Decking</a>
             <a href="fencing.html">Fencing</a>
-            <a href="artificialgrass.html">Artificial Grass</a>
             <a href="kitchenrenovations.html">Kitchen Renovations</a>
             <a href="bathroomrefits.html">Bathroom Refits</a>
-            <a href="extensions.html">Extensions</a>
+            <a href="conservatories.html">Conservatories</a>
           </div>
         </div>
         <a href="gallery.html">GALLERY</a>
@@ -471,14 +469,6 @@
             <p>Bespoke timber and composite decking solutions designed to maximise your outdoor space, adding value and kerb appeal to your property.</p>
             <a href="decking.html" class="btn-cta">View Decking</a>
           </div>
-          <div class="service-card">
-            <div class="service-img-wrap">
-              <img src="images/about-garden.jpg" alt="Artificial Grass" />
-            </div>
-            <h3>Artificial Grass</h3>
-            <p>Premium artificial grass installation for a perfect, low-maintenance lawn all year round. Ideal for families, pets, and busy households.</p>
-            <a href="artificialgrass.html" class="btn-cta">View Artificial Grass</a>
-          </div>
         </div>
 
         <h2 class="section-title">Indoor Services</h2>
@@ -501,11 +491,11 @@
           </div>
           <div class="service-card">
             <div class="service-img-wrap">
-              <img src="images/hero.jpg" alt="Extensions" />
+              <img src="images/conservatory-extension-brick.jpg" alt="Conservatories" />
             </div>
-            <h3>Extensions</h3>
-            <p>Single and double storey extensions to expand your living space. We manage the full project from planning to final completion.</p>
-            <a href="extensions.html" class="btn-cta">View Extensions</a>
+            <h3>Conservatories</h3>
+            <p>Bright conservatories and glazed living spaces built, upgraded and finished around your home, garden and day-to-day living.</p>
+            <a href="conservatories.html" class="btn-cta">View Conservatories</a>
           </div>
         </div>
 
@@ -537,15 +527,16 @@
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
         <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" />
         <p>© Casa4 Developments</p>
-        <p>Fareham, Hampshire | Indoor &amp; Outdoor Living</p>
+        <p>Fareham, Hampshire | Indoor & Outdoor Living</p>
       </div>
       <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; padding-top: 16px; text-align: center; font-size: 0.82rem; color: #e5e5e5;">
-        <p>Built &amp; maintained by <a href="https://bryantdigitalsolutions.com" target="_blank" rel="noopener noreferrer" style="color: #4e9645; text-decoration: underline;">Bryant Digital Solutions</a> | Part of <a href="https://bryantgroupholdings.co.uk" target="_blank" rel="noopener noreferrer" style="color: #4e9645; text-decoration: underline;">Bryant Group Holdings Ltd</a></p>
+        <p>Built & maintained by <a href="https://bryantdigitalsolutions.com" target="_blank" rel="noopener noreferrer" style="color: #4e9645; text-decoration: underline;">Bryant Digital Solutions</a></p>
         <p style="margin-top: 6px;"><a href="privacy.html" style="color: #e5e5e5; text-decoration: underline;">Privacy Policy</a></p>
       </div>
     </div>
   </footer>
 
   <script src="assets/lead-capture.js"></script>
+  <script src="assets/nav-dropdown.js"></script>
 </body>
 </html>

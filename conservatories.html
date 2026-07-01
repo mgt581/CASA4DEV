@@ -13,9 +13,9 @@
   <meta name="apple-mobile-web-app-title" content="Casa4 Developments" />
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
   <link rel="icon" type="image/png" href="images/apple-touch-icon.png" />
-  <title>Artificial Grass Installation Fareham | Casa4 Developments</title>
-  <meta name="description" content="Low-maintenance artificial grass installation in Fareham, Hampshire. Ideal for families, pets and tidy gardens. Request a free Casa4 Developments quote." />
-  <link rel="canonical" href="https://casa4developments.co.uk/artificialgrass" />
+  <title>Conservatories Fareham | Casa4 Developments</title>
+  <meta name="description" content="Conservatory builds, upgrades and interiors in Fareham, Hampshire. Casa4 Developments creates bright, practical glazed living spaces with free quotes and finance options." />
+  <link rel="canonical" href="https://casa4developments.co.uk/conservatories" />
 
   <style>
     :root {
@@ -138,8 +138,7 @@
       color: #fff;
     }
 
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown:focus-within .nav-dropdown-menu {
+    .nav-dropdown.is-open .nav-dropdown-menu {
       display: block;
     }
 
@@ -251,11 +250,22 @@
       margin-bottom: 60px;
     }
 
-    .content-grid img {
+    .service-image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .service-image-grid img {
       border-radius: 14px;
       width: 100%;
-      height: 340px;
+      height: 210px;
       object-fit: cover;
+    }
+
+    .service-image-grid img:first-child {
+      grid-column: 1 / -1;
+      height: 260px;
     }
 
     .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
@@ -343,6 +353,8 @@
         font-size: 0.9rem;
       }
       .content-grid { grid-template-columns: 1fr; }
+      .service-image-grid img,
+      .service-image-grid img:first-child { height: 260px; }
       .features-grid { grid-template-columns: 1fr 1fr; }
       .lead-proof-strip { grid-template-columns: 1fr 1fr; }
       .process-steps { grid-template-columns: 1fr; }
@@ -376,7 +388,7 @@
       <nav class="nav">
         <a href="index.html">HOME</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-dropdown-toggle active">SERVICES ▾</a>
+          <a href="services.html" class="nav-dropdown-toggle active" aria-expanded="false">SERVICES ▾</a>
           <div class="nav-dropdown-menu">
             <a href="pergolas.html">Pergolas</a>
             <a href="outdoorkitchens.html">Outdoor Kitchens</a>
@@ -386,9 +398,9 @@
             <a href="landscaping.html">Landscaping</a>
             <a href="decking.html">Decking</a>
             <a href="fencing.html">Fencing</a>
-            <a href="artificialgrass.html" class="active">Artificial Grass</a>
             <a href="kitchenrenovations.html">Kitchen Renovations</a>
             <a href="bathroomrefits.html">Bathroom Refits</a>
+            <a href="conservatories.html" class="active">Conservatories</a>
             <a href="extensions.html">Extensions</a>
           </div>
         </div>
@@ -405,10 +417,10 @@
   <main>
     <div class="page-hero">
       <div class="container">
-        <h1>Artificial Grass</h1>
-        <p>Premium artificial grass installation for a perfect, low-maintenance lawn all year round. Ideal for families, pets, and busy households.</p>
+        <h1>Conservatories</h1>
+        <p>Bright, practical conservatories and glazed living spaces designed to add year-round comfort, natural light and extra room to your home.</p>
         <div class="hero-cta-group">
-          <a href="contact.html?service=Artificial%20Grass" class="btn btn-quote">Get a Free Quote</a>
+          <a href="contact.html?service=Conservatories" class="btn btn-quote">Get a Free Quote</a>
           <a href="https://wa.me/447900281011" class="btn btn-whatsapp">WhatsApp Us</a>
         </div>
         <div class="lead-proof-strip" aria-label="Why choose Casa4 Developments">
@@ -424,30 +436,34 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="images/about-garden.jpg" alt="Artificial grass installation by Casa4 Developments" />
+          <div class="service-image-grid" aria-label="Conservatory project examples">
+            <img src="images/conservatory-extension-brick.jpg" alt="White conservatory extension with brick base and glazed roof" />
+            <img src="images/conservatory-exterior-glazed.jpg" alt="Glazed conservatory exterior with white frames and brick base" />
+            <img src="images/conservatory-interior-flooring.jpg" alt="Conservatory interior with herringbone flooring and window boards" />
+          </div>
           <div class="content-text">
-            <h2>A Beautiful Lawn Without the Hassle</h2>
-            <p>Enjoy a lush, green lawn every day of the year without the mowing, watering, or patchy bare spots. Our premium artificial grass looks and feels incredibly natural while requiring virtually no upkeep — perfect for families with children and pets.</p>
-            <p>We prepare the ground correctly, lay high-quality drainage membrane, and install the artificial turf to the highest standard for a long-lasting, beautiful result.</p>
-            <a href="contact.html?service=Artificial%20Grass" class="btn btn-quote">Request a Quote</a>
+            <h2>Create a Bright New Living Space</h2>
+            <p>A conservatory is a smart way to bring more natural light into your home while creating a useful extra room for dining, relaxing, working or family time.</p>
+            <p>Casa4 Developments can help with conservatory builds, upgrades and finishing work, including glazing, doors, flooring, plastering and the details that make the space feel complete.</p>
+            <a href="contact.html?service=Conservatories" class="btn btn-quote">Request a Quote</a>
           </div>
         </div>
 
         <div class="features-grid">
           <div class="feature-card">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
-            <h3>Natural Look &amp; Feel</h3>
-            <p>We use only premium artificial grass that closely mimics the look and texture of a real lawn, staying green all year round.</p>
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <h3>Extra Living Space</h3>
+            <p>A conservatory gives you a bright dining area, garden room, playroom or relaxed seating space without moving home.</p>
           </div>
           <div class="feature-card">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
-            <h3>Low Maintenance</h3>
-            <p>No mowing, watering, or feeding required. Just an occasional brush to keep it looking its best — ideal for busy families.</p>
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></div>
+            <h3>Glazing &amp; Finishing</h3>
+            <p>We consider windows, doors, roof details, flooring, plastering and finishing so the room feels complete.</p>
           </div>
           <div class="feature-card">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg></div>
-            <h3>Pet &amp; Child Friendly</h3>
-            <p>Our artificial grass is durable, hygienic, and safe for children and pets to play on, with excellent drainage built in.</p>
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+            <h3>Built Around Your Home</h3>
+            <p>Every design is planned around your property, garden access and how you want to use the space.</p>
           </div>
         </div>
 
@@ -473,10 +489,10 @@
         </div>
 
         <div class="cta-banner">
-          <h2>Ready for a Perfect Lawn?</h2>
+          <h2>Ready to Plan Your Conservatory?</h2>
           <p>Contact us today for a free, no-obligation quote. We cover Fareham, Hampshire and the wider South Coast area.</p>
           <div class="cta-group">
-            <a href="contact.html?service=Artificial%20Grass" class="btn btn-quote">Get a Free Quote</a>
+            <a href="contact.html?service=Conservatories" class="btn btn-quote">Get a Free Quote</a>
             <a href="https://wa.me/447900281011" class="btn btn-whatsapp"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>WhatsApp Us</a>
             <a href="tel:01489290012" class="btn btn-back"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.92z"/></svg>01489 290012</a>
           </div>
@@ -501,5 +517,6 @@
   </footer>
 
   <script src="assets/lead-capture.js"></script>
+  <script src="assets/nav-dropdown.js"></script>
 </body>
 </html>

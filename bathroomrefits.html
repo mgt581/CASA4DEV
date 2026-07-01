@@ -138,8 +138,7 @@
       color: #fff;
     }
 
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown:focus-within .nav-dropdown-menu {
+    .nav-dropdown.is-open .nav-dropdown-menu {
       display: block;
     }
 
@@ -376,7 +375,7 @@
       <nav class="nav">
         <a href="index.html">HOME</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-dropdown-toggle active">SERVICES ▾</a>
+          <a href="services.html" class="nav-dropdown-toggle active" aria-expanded="false">SERVICES ▾</a>
           <div class="nav-dropdown-menu">
             <a href="pergolas.html">Pergolas</a>
             <a href="outdoorkitchens.html">Outdoor Kitchens</a>
@@ -386,9 +385,9 @@
             <a href="landscaping.html">Landscaping</a>
             <a href="decking.html">Decking</a>
             <a href="fencing.html">Fencing</a>
-            <a href="artificialgrass.html">Artificial Grass</a>
             <a href="kitchenrenovations.html">Kitchen Renovations</a>
             <a href="bathroomrefits.html" class="active">Bathroom Refits</a>
+            <a href="conservatories.html">Conservatories</a>
             <a href="extensions.html">Extensions</a>
           </div>
         </div>
@@ -501,5 +500,6 @@
   </footer>
 
   <script src="assets/lead-capture.js"></script>
+  <script src="assets/nav-dropdown.js"></script>
 </body>
 </html>
