@@ -257,6 +257,16 @@
       object-fit: cover;
     }
 
+    .content-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .content-images img:first-child {
+      grid-column: 1 / -1;
+    }
+
     .content-text h2 { font-size: 1.9rem; margin-bottom: 18px; }
 
     .content-text p {
@@ -346,6 +356,7 @@
       .lead-proof-strip { grid-template-columns: 1fr 1fr; }
       .process-steps { grid-template-columns: 1fr; }
       .page-hero h1 { font-size: 2rem; }
+      .content-images img { height: 260px; }
     }
 
     @media (max-width: 600px) {
@@ -354,6 +365,8 @@
       .hero-cta-group,
       .cta-group { flex-direction: column; align-items: center; }
       .btn { width: 100%; max-width: 260px; }
+      .content-images { grid-template-columns: 1fr; }
+      .content-images img:first-child { grid-column: auto; }
       .features-grid { grid-template-columns: 1fr; }
       .lead-proof-strip { grid-template-columns: 1fr; }
       .process-panel { padding: 28px 20px; }
@@ -423,7 +436,11 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="images/about-garden.jpg" alt="Bathroom refit by Casa4 Developments" />
+          <div class="content-images">
+            <img src="https://github.com/user-attachments/assets/053508cc-06c7-422e-8dbb-ef220360c127" alt="Bathroom refit with marble effect wall tiles and freestanding bath" />
+            <img src="https://github.com/user-attachments/assets/26d22364-3eaa-40ee-9668-a7ce6131af1b" alt="Modern grey bathroom with walk-in shower and vanity unit" />
+            <img src="https://github.com/user-attachments/assets/d1e487f9-63b6-47e6-be69-e28d49c5cca9" alt="Compact bathroom with white tiled shower enclosure and grey flooring" />
+          </div>
           <div class="content-text">
             <h2>Your Perfect Bathroom</h2>
             <p>A bathroom renovation can completely transform the feel of your home. From a fresh, modern update to a fully tiled luxury wet room, our team handles the entire project — design, tiling, plumbing, and finishing touches — ensuring a stunning result every time.</p>
