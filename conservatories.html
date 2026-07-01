@@ -138,8 +138,7 @@
       color: #fff;
     }
 
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown:focus-within .nav-dropdown-menu {
+    .nav-dropdown.is-open .nav-dropdown-menu {
       display: block;
     }
 
@@ -389,7 +388,7 @@
       <nav class="nav">
         <a href="index.html">HOME</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-dropdown-toggle active">SERVICES ▾</a>
+          <a href="services.html" class="nav-dropdown-toggle active" aria-expanded="false">SERVICES ▾</a>
           <div class="nav-dropdown-menu">
             <a href="pergolas.html">Pergolas</a>
             <a href="outdoorkitchens.html">Outdoor Kitchens</a>
@@ -518,5 +517,6 @@
   </footer>
 
   <script src="assets/lead-capture.js"></script>
+  <script src="assets/nav-dropdown.js"></script>
 </body>
 </html>
