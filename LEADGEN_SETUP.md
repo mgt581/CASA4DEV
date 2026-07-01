@@ -7,8 +7,8 @@ This site is now wired for direct lead capture and ad conversion tracking, but t
 Set these in the `casa4dev` Cloudflare Pages project:
 
 - `RESEND_API_KEY`: API key from Resend for sending lead emails.
-- `LEAD_TO_EMAIL`: where quote requests should go. Multiple recipients can be comma-separated, for example `casa4developments@outlook.com,allleadshere@yahoo.com`. This email is routed through Cloudflare Email Routing configured with the display address `info@casa4developments.co.uk`.
-- `LEAD_FROM_EMAIL`: verified sender. Use a Resend-verified domain sender such as `Casa4 Developments <leads@casa4developments.co.uk>` once DNS verification is complete.
+- `LEAD_TO_EMAIL`: where quote requests should go. Multiple recipients can be comma-separated, for example `casa4developments@outlook.com,allleadshere@yahoo.com`.
+- `LEAD_FROM_EMAIL`: verified sender. Use a verified domain sender such as `Casa4 Developments <info@casa4developments.co.uk>` once the domain is verified.
 - `LEAD_WEBHOOK_URL`: optional CRM/Zapier/Make webhook. Use this instead of, or alongside, email delivery.
 - `LEADS_EXPORT_TOKEN`: secret token used to download a CSV export from `/api/leads/export?token=...`.
 - `GTM_CONTAINER_ID`: optional Google Tag Manager container ID, for example `GTM-XXXXXXX`.
@@ -66,6 +66,8 @@ The form endpoint is:
 If neither `RESEND_API_KEY` nor `LEAD_WEBHOOK_URL` is configured, the frontend opens an email fallback instead of pretending the form was sent.
 
 Resend will reject unverified senders such as `casa4developments@outlook.com`. Add and verify `casa4developments.co.uk` in Resend, add the DNS records it provides, then use a sender on that domain.
+
+If you are using Cloudflare Email Routing for `info@casa4developments.co.uk`, that will handle incoming mail to the right inbox, but it does not by itself make Outlook or Yahoo send mail "as" `info@casa4developments.co.uk`. For replies to show that sender address, the mailbox you reply from must support a verified `send as` alias, or you need to send through the verified domain sender configured above.
 
 ## Google Ads / GA4
 
