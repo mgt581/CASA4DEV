@@ -134,8 +134,9 @@
 
     .nav-dropdown-menu a:hover { background: var(--accent); color: #fff; }
 
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown:focus-within .nav-dropdown-menu { display: block; }
+    .nav-dropdown.is-open .nav-dropdown-menu {
+      display: block;
+    }
 
     .call-box {
       background: #fff;
@@ -361,7 +362,7 @@
       <nav class="nav">
         <a href="index.html">HOME</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-dropdown-toggle">SERVICES ▾</a>
+          <a href="services.html" class="nav-dropdown-toggle" aria-expanded="false">SERVICES ▾</a>
           <div class="nav-dropdown-menu">
             <a href="pergolas.html">Pergolas</a>
             <a href="outdoorkitchens.html">Outdoor Kitchens</a>
@@ -814,5 +815,6 @@
   </script>
 
   <script src="assets/lead-capture.js"></script>
+  <script src="assets/nav-dropdown.js"></script>
 </body>
 </html>
