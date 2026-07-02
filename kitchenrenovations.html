@@ -250,10 +250,15 @@
       margin-bottom: 60px;
     }
 
-    .content-grid img {
+    .content-images {
+      display: grid;
+      gap: 18px;
+    }
+
+    .content-images img {
       border-radius: 14px;
       width: 100%;
-      height: 340px;
+      height: 220px;
       object-fit: cover;
     }
 
@@ -346,6 +351,7 @@
       .lead-proof-strip { grid-template-columns: 1fr 1fr; }
       .process-steps { grid-template-columns: 1fr; }
       .page-hero h1 { font-size: 2rem; }
+      .content-images img { height: 260px; }
     }
 
     @media (max-width: 600px) {
@@ -423,7 +429,11 @@
       <div class="container">
 
         <div class="content-grid">
-          <img src="https://github.com/user-attachments/assets/3ff594ea-28d0-4ab4-b5e0-75ce71dc12d6" alt="Kitchen renovation by Casa4 Developments" />
+          <div class="content-images">
+            <img src="gallery-content/kitchen-renovation-cream-01.jpg" alt="Cream fitted kitchen with grey tile splashback and integrated oven" />
+            <img src="gallery-content/kitchen-renovation-cream-02.jpg" alt="Cream fitted kitchen with grey splashback and wood effect worktops" />
+            <img src="gallery-content/kitchen-renovation-gloss-01.jpg" alt="Gloss black kitchen with wood worktops and feature lighting" />
+          </div>
           <div class="content-text">
             <h2>Your Dream Kitchen Awaits</h2>
             <p>The kitchen is the heart of the home. Whether you want a sleek modern design, a classic shaker style, or something entirely bespoke, our team manages every aspect of your kitchen renovation — from initial design through to the finished installation.</p>
