@@ -310,7 +310,7 @@
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
-        <img src="images/logo.png" alt="Casa4 Developments" class="logo-img" />
+        <img src="images/logo.png" alt="Casa4 Developments" class="logo-img" decoding="async" loading="eager" fetchpriority="high">
       </a>
       <nav class="nav">
         <a href="index.html">HOME</a>
@@ -420,7 +420,7 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-main">
-        <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" />
+        <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" decoding="async" loading="lazy">
         <p>© Casa4 Developments</p>
         <p>Fareham, Hampshire | Indoor &amp; Outdoor Living</p>
       </div>
@@ -431,7 +431,7 @@
     </div>
   </footer>
 
-  <script src="assets/lead-capture.js"></script>
-  <script src="assets/nav-dropdown.js"></script>
+  <script src="assets/lead-capture.js" defer></script>
+  <script src="assets/nav-dropdown.js" defer></script>
 </body>
 </html>

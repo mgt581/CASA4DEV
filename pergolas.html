@@ -456,7 +456,7 @@
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
-        <img src="images/logo.png" alt="Casa4 Developments" class="logo-img" />
+        <img src="images/logo.png" alt="Casa4 Developments" class="logo-img" decoding="async" loading="eager" fetchpriority="high">
       </a>
       <nav class="nav">
         <a href="index.html">HOME</a>
@@ -510,8 +510,8 @@
 
         <div class="content-grid">
           <div class="content-images">
-            <img src="gallery-content/oak-pergola.jpg" alt="Bespoke oak pergola built over a natural stone patio" />
-            <img src="gallery-content/timber-pergola-patio.jpg" alt="Timber pergola covering a landscaped patio seating area" />
+            <img src="gallery-content/oak-pergola.jpg" alt="Bespoke oak pergola built over a natural stone patio" decoding="async" loading="lazy">
+            <img src="gallery-content/timber-pergola-patio.jpg" alt="Timber pergola covering a landscaped patio seating area" decoding="async" loading="lazy">
           </div>
           <div class="content-text">
             <h2>Transform Your Outdoor Space</h2>
@@ -577,7 +577,7 @@
   <footer class="footer">
     <div class="container">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-        <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" />
+        <img src="images/logo.png" alt="Casa4 Developments" class="footer-logo" decoding="async" loading="lazy">
         <p>© Casa4 Developments</p>
         <p>Fareham, Hampshire | Indoor &amp; Outdoor Living</p>
       </div>
@@ -588,7 +588,7 @@
     </div>
   </footer>
 
-  <script src="assets/lead-capture.js"></script>
-  <script src="assets/nav-dropdown.js"></script>
+  <script src="assets/lead-capture.js" defer></script>
+  <script src="assets/nav-dropdown.js" defer></script>
 </body>
 </html>
