@@ -59,7 +59,7 @@ function buildEmailHtml(lead) {
 async function sendWithResend(env, lead) {
   if (!env.RESEND_API_KEY) return false;
 
-  var to = emailList(env.LEAD_TO_EMAIL, "casa4developments@outlook.com,allleadshere@yahoo.com");
+  var to = emailList(env.LEAD_TO_EMAIL, "casa4developments@outlook.com,ajbryantsleads@gmail.com");
   var from = env.LEAD_FROM_EMAIL || "Casa4 Developments <info@casa4developments.co.uk>";
   var subject = "New quote request - " + (lead.service || "Website enquiry");
 

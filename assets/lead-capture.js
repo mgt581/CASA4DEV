@@ -197,7 +197,7 @@
       "Page: " + window.location.href
     ].join("\n");
 
-    return "mailto:info@casa4developments.co.uk?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    return "mailto:info@casa4developments.co.uk,ajbryantsleads@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   }
 
   function setStatus(form, message, isError) {
