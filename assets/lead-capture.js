@@ -50,11 +50,18 @@
     return value;
   }
 
-  function getAttribution() {
+  function getFirstTouchAttribution() {
+    var key = "casa4_first_touch_attribution";
+    var stored = getStorageValue(window.sessionStorage, key);
+
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (error) {}
+    }
+
     var params = new URLSearchParams(window.location.search);
-    return {
-      page: window.location.href,
-      landing_page: getLandingPage(),
+    var attribution = {
       referrer: document.referrer || "",
       utm_source: params.get("utm_source") || "",
       utm_medium: params.get("utm_medium") || "",
@@ -63,7 +70,27 @@
       utm_content: params.get("utm_content") || "",
       gclid: params.get("gclid") || "",
       fbclid: params.get("fbclid") || "",
-      msclkid: params.get("msclkid") || "",
+      msclkid: params.get("msclkid") || ""
+    };
+
+    setStorageValue(window.sessionStorage, key, JSON.stringify(attribution));
+    return attribution;
+  }
+
+  function getAttribution() {
+    var firstTouch = getFirstTouchAttribution();
+    return {
+      page: window.location.href,
+      landing_page: getLandingPage(),
+      referrer: firstTouch.referrer || "",
+      utm_source: firstTouch.utm_source || "",
+      utm_medium: firstTouch.utm_medium || "",
+      utm_campaign: firstTouch.utm_campaign || "",
+      utm_term: firstTouch.utm_term || "",
+      utm_content: firstTouch.utm_content || "",
+      gclid: firstTouch.gclid || "",
+      fbclid: firstTouch.fbclid || "",
+      msclkid: firstTouch.msclkid || "",
       session_id: getSessionId(),
       client_id: getClientId()
     };
@@ -87,14 +114,16 @@
     }).catch(function () {});
   }
 
-  function pushEvent(name, params) {
+  function pushEvent(name, params, options) {
     var eventPayload = Object.assign({}, getAttribution(), params || {}, { event_name: name });
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(Object.assign({ event: name }, params || {}));
     if (typeof window.gtag === "function") {
       window.gtag("event", name, params || {});
     }
-    storeLeadEvent(eventPayload);
+    if (!options || options.store !== false) {
+      storeLeadEvent(eventPayload);
+    }
   }
 
   function loadScript(src, attrs) {
@@ -178,34 +207,30 @@
     submitButton.parentNode.insertBefore(wrapper, submitButton);
   }
 
-  function buildMailto(payload) {
-    var service = payload.service || "Website enquiry";
-    var subject = "Casa4 Developments quote request - " + service;
-    var body = [
-      "New quote request from casa4developments.co.uk",
-      "",
-      "Name: " + (payload.name || "Not provided"),
-      "Phone: " + (payload.phone || "Not provided"),
-      "Email: " + (payload.email || "Not provided"),
-      "Postcode / Area: " + (payload.postcode || "Not provided"),
-      "Service Required: " + service,
-      "Ideal Timeframe: " + (payload.timeframe || "Not provided"),
-      "",
-      "Project Details:",
-      payload.message || "Not provided",
-      "",
-      "Page: " + window.location.href
-    ].join("\n");
-
-    return "mailto:info@casa4developments.co.uk,ajbryantsleads@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-  }
-
-  function setStatus(form, message, isError) {
+  function setFailureStatus(form) {
     var status = form.querySelector("[data-form-status]");
     if (!status) return;
-    status.textContent = message;
+
+    status.textContent = "We couldn't send your enquiry online. Your details have not been submitted. Please ";
     status.style.display = "block";
-    status.style.color = isError ? "#ffd1d1" : "#e5e5e5";
+    status.style.color = "#ffd1d1";
+
+    var callLink = document.createElement("a");
+    callLink.href = "tel:01489290012";
+    callLink.textContent = "call 01489 290012";
+    callLink.style.color = "inherit";
+    callLink.style.fontWeight = "800";
+
+    var whatsappLink = document.createElement("a");
+    whatsappLink.href = "https://wa.me/447900281011";
+    whatsappLink.textContent = "WhatsApp us";
+    whatsappLink.style.color = "inherit";
+    whatsappLink.style.fontWeight = "800";
+
+    status.appendChild(callLink);
+    status.appendChild(document.createTextNode(" or "));
+    status.appendChild(whatsappLink);
+    status.appendChild(document.createTextNode(" and we will help straight away."));
   }
 
   async function submitLead(form) {
@@ -245,12 +270,16 @@
         service: payload.service || "Website enquiry",
         form_source: payload.source,
         source: payload.source
-      });
+      }, { store: false });
 
       window.location.href = result.redirect || "/thank-you.html";
     } catch (error) {
-      setStatus(form, error.message + " Opening an email fallback now.", true);
-      window.location.href = buildMailto(payload);
+      pushEvent("lead_form_error", {
+        service: payload.service || "Website enquiry",
+        form_source: payload.source,
+        source: payload.source
+      });
+      setFailureStatus(form);
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.textContent = submitButton.dataset.originalText || "Send Message & Request Free Quote";
@@ -275,35 +304,36 @@
   }
 
   function trackClicks() {
-    document.querySelectorAll("a[href^='tel:']").forEach(function (link) {
-      link.addEventListener("click", function () {
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest ? event.target.closest("a[href]") : null;
+      if (!link) return;
+
+      if (link.getAttribute("href").indexOf("tel:") === 0) {
         pushEvent("phone_click", {
           link_text: link.textContent.trim(),
           link_url: link.href,
           phone_number: link.getAttribute("href").replace(/^tel:/, "")
         });
-      });
-    });
+        return;
+      }
 
-    document.querySelectorAll("a[href*='wa.me']").forEach(function (link) {
-      link.addEventListener("click", function () {
+      if (link.href.indexOf("wa.me") !== -1) {
         var match = link.href.match(/wa\.me\/([^?]+)/);
         pushEvent("whatsapp_click", {
           link_text: link.textContent.trim(),
           link_url: link.href,
           whatsapp_number: match ? match[1] : ""
         });
-      });
-    });
+        return;
+      }
 
-    document.querySelectorAll("a[href*='contact.html']").forEach(function (link) {
-      link.addEventListener("click", function () {
+      if (link.getAttribute("href").indexOf("contact.html") !== -1) {
         pushEvent("quote_cta_click", {
           link_text: link.textContent.trim(),
           link_url: link.href,
           href: link.getAttribute("href")
         });
-      });
+      }
     });
   }
 
@@ -442,9 +472,14 @@
         messages.appendChild(chatMessage("Thanks, that has been sent. A human advisor can follow up with you shortly.", "bot"));
         form.remove();
       } catch (error) {
+        pushEvent("chat_lead_error", {
+          form_source: "chat-widget",
+          source: "chat-widget",
+          chat_reason: reason
+        });
         status.style.display = "block";
         status.style.color = "#b91c1c";
-        status.textContent = error.message;
+        status.textContent = "We couldn't send this online. Please use the Call or WhatsApp button below.";
         button.disabled = false;
         button.textContent = "Send To Human Advisor";
       }
@@ -527,7 +562,10 @@
     trackClicks();
     if (!pageTracked) {
       pageTracked = true;
-      pushEvent("page_view", {});
+      storeLeadEvent(Object.assign({}, getAttribution(), { event_name: "page_view" }));
+    }
+    if (window.location.pathname.indexOf("/thank-you") === 0) {
+      pushEvent("lead_thank_you_view", {});
     }
 
     document.querySelectorAll("form[data-lead-form]").forEach(function (form) {

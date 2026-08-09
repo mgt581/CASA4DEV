@@ -298,9 +298,7 @@ export async function onRequestPost(context) {
       if (deliveryErrors.length) console.error("Lead delivery failed:", deliveryErrors.join(" | "));
       return jsonResponse({
         ok: false,
-        error: deliveryErrors.length
-          ? "Lead capture is configured but delivery failed. Please call or WhatsApp us."
-          : "Lead capture is not configured yet. Add RESEND_API_KEY or LEAD_WEBHOOK_URL in Cloudflare Pages."
+        error: "We couldn't send your enquiry online. Please call or WhatsApp us."
       }, deliveryErrors.length ? 502 : 503);
     }
 

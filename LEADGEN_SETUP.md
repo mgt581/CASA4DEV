@@ -63,7 +63,7 @@ The form endpoint is:
 /api/lead
 ```
 
-If neither `RESEND_API_KEY` nor `LEAD_WEBHOOK_URL` is configured, the frontend opens an email fallback instead of pretending the form was sent.
+If neither `RESEND_API_KEY` nor `LEAD_WEBHOOK_URL` is configured, or if delivery fails, the frontend clearly says that the enquiry was not submitted and presents tracked Call and WhatsApp alternatives. It does not open the visitor's email application or imply that the enquiry was received.
 
 Resend will reject unverified senders such as `casa4developments@outlook.com`. Add and verify `casa4developments.co.uk` in Resend, add the DNS records it provides, then use a sender on that domain.
 
@@ -79,11 +79,15 @@ The frontend pushes these events into `dataLayer` and `gtag` when available:
 - `chat_open`
 - `chat_question`
 - `chat_lead`
+- `chat_lead_error`
 - `lead_form_submit_attempt`
+- `lead_form_error`
 - `generate_lead`
 - `lead_thank_you_view`
 
-Set `GTM_CONTAINER_ID` or `GA_MEASUREMENT_ID` in Cloudflare Pages to load Google tracking. Then map these events in GA4 and Google Ads conversions.
+Set `GTM_CONTAINER_ID` or `GA_MEASUREMENT_ID` in Cloudflare Pages to load Google tracking. The production site currently uses Google Tag Manager, so each relevant `dataLayer` event needs a matching Custom Event trigger and GA4 Event tag in the live GTM container. Do not add a second GA4 loader alongside GTM, as that can duplicate page views and conversions.
+
+The server stores a successful form delivery as `generate_lead`. The browser sends the same event to GA4 but deliberately does not store a second copy in D1. This keeps the internal event export from double-counting successful forms.
 
 Recommended conversions:
 
@@ -93,6 +97,16 @@ Recommended conversions:
 - Secondary: `whatsapp_click`
 - Secondary: `quote_cta_click`
 - Secondary: `chat_open`
+
+After publishing GTM changes, verify the journey in GTM Preview and GA4 DebugView:
+
+1. Open a page with test UTM parameters.
+2. Navigate to the contact page and confirm the original UTM values remain attached.
+3. Click each displayed phone number and confirm `phone_click`.
+4. Click WhatsApp and confirm `whatsapp_click`.
+5. Submit a labelled test form and confirm one `generate_lead` event, one lead database row, one notification email and the thank-you page.
+6. Submit a labelled chat request and confirm `chat_lead` plus one delivered lead.
+7. Temporarily test a failed delivery route in preview and confirm `lead_form_error` or `chat_lead_error` without exposing internal configuration details.
 
 ## Call Tracking
 

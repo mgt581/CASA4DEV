@@ -28,7 +28,12 @@ function allowedEventName(value) {
     "quote_cta_click",
     "phone_click",
     "whatsapp_click",
+    "chat_open",
+    "chat_question",
+    "chat_lead",
+    "chat_lead_error",
     "lead_form_submit_attempt",
+    "lead_form_error",
     "generate_lead",
     "lead_thank_you_view"
   ].indexOf(name) !== -1 ? name : "";
