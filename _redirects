@@ -1,0 +1,69 @@
+# Legacy WordPress and retired static-site URLs verified through public search,
+# the Internet Archive, and repository history. Static rules deliberately avoid
+# current live paths such as /block-paving-portsmouth.
+
+/about / 301
+/about/ / 301
+
+/artificialgrass /landscaping 301
+/artificialgrass/ /landscaping 301
+/artificialgrass.html /landscaping 301
+
+/block-paving /blockpaving 301
+/block-paving/ /blockpaving 301
+/block-paving-fareham /blockpaving 301
+/block-paving-fareham/ /blockpaving 301
+/block-paving-in-fareham /blockpaving 301
+/block-paving-in-fareham/ /blockpaving 301
+/block-paving-locks-heath /blockpaving 301
+/block-paving-locks-heath/ /blockpaving 301
+/block-paving-Locks-Heath /blockpaving 301
+/block-paving-Locks-Heath/ /blockpaving 301
+/block-paving-lymington /blockpaving 301
+/block-paving-lymington/ /blockpaving 301
+/block-paving-lyndhurst /blockpaving 301
+/block-paving-lyndhurst/ /blockpaving 301
+/block-paving-Lyndhurst /blockpaving 301
+/block-paving-Lyndhurst/ /blockpaving 301
+/block-paving-new-forest /blockpaving 301
+/block-paving-new-forest/ /blockpaving 301
+/block-paving-park-gate /blockpaving 301
+/block-paving-park-gate/ /blockpaving 301
+/block-paving-southampton /blockpaving 301
+/block-paving-southampton/ /blockpaving 301
+/block-paving-stubbington /blockpaving 301
+/block-paving-stubbington/ /blockpaving 301
+/block-paving-whiteley /blockpaving 301
+/block-paving-whiteley/ /blockpaving 301
+
+/driveways /blockpaving 301
+/driveways/ /blockpaving 301
+/driveways-fareham /blockpaving 301
+/driveways-fareham/ /blockpaving 301
+/driveways-locks-heath /blockpaving 301
+/driveways-locks-heath/ /blockpaving 301
+/driveways-lymington /blockpaving 301
+/driveways-lymington/ /blockpaving 301
+/driveways-lyndhurst /blockpaving 301
+/driveways-lyndhurst/ /blockpaving 301
+/driveways-new-forest /blockpaving 301
+/driveways-new-forest/ /blockpaving 301
+/driveways-park-gate /blockpaving 301
+/driveways-park-gate/ /blockpaving 301
+/driveways-portsmouth /block-paving-portsmouth 301
+/driveways-portsmouth/ /block-paving-portsmouth 301
+/driveways-southampton /blockpaving 301
+/driveways-southampton/ /blockpaving 301
+/driveways-stubbington /blockpaving 301
+/driveways-stubbington/ /blockpaving 301
+/driveways-whiteley /blockpaving 301
+/driveways-whiteley/ /blockpaving 301
+
+/indian-sandstone /patios 301
+/indian-sandstone/ /patios 301
+/offers / 301
+/offers/ / 301
+/outdoor-kitchens /outdoorkitchens 301
+/outdoor-kitchens/ /outdoorkitchens 301
+/privacy-policy-2 /privacy 301
+/privacy-policy-2/ /privacy 301
