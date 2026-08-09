@@ -71,9 +71,7 @@
       },
       "description": "Family-run home improvement specialists for driveways, patios, landscaping, outdoor kitchens, bathrooms, kitchens and conservatories.",
       "sameAs": [
-        "https://www.checkatrade.com/trades/Casa4DevelopmentsLtd",
-        "https://www.trustatrader.com/blockpaving-driveways-in-Portsmouth",
-        "https://g.page/r/Cda-r7HFwhqHEAE/review"
+        "https://www.google.com/maps?cid=9735307698860179158"
       ]
     }
   </script>
@@ -366,7 +364,8 @@
 
     .trust-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: minmax(0, 420px);
+      justify-content: center;
       gap: 24px;
     }
 
@@ -390,13 +389,15 @@
       box-shadow: 0 10px 32px rgba(0,0,0,0.28);
     }
 
-    .trust-badge img {
-      height: 80px;
-      width: auto;
-      object-fit: contain;
+    .trust-section .trust-badge-brand {
+      margin: 0;
+      color: #4285f4;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
     }
 
-    .trust-badge-label {
+    .trust-section .trust-badge-label {
       font-weight: 700;
       font-size: 1rem;
       color: #333;
@@ -739,7 +740,7 @@
     }
 
     @media (min-width: 600px) and (max-width: 979px) {
-      .trust-grid { grid-template-columns: repeat(3, 1fr); }
+      .trust-grid { grid-template-columns: minmax(0, 420px); }
     }
   </style>
 </head>
@@ -810,23 +811,13 @@
 
     <section class="trust-section">
       <div class="container">
-        <h2>Trusted & Verified</h2>
-        <p>We're independently verified — click below to read our reviews and see why homeowners choose us.</p>
+        <h2>Customer Reviews</h2>
+        <p>Read independent customer feedback on our verified Google business profile.</p>
         <div class="trust-grid">
-          <a href="https://www.checkatrade.com/trades/Casa4DevelopmentsLtd" target="_blank" rel="noopener noreferrer" class="trust-badge">
-            <img src="images/checkatrade.png?v=2" alt="Checkatrade Verified" decoding="async" loading="lazy">
-            <p class="trust-badge-label">Checkatrade Members</p>
-            <span class="trust-badge-btn">View Our Profile ›</span>
-          </a>
-          <a href="https://www.trustatrader.com/blockpaving-driveways-in-Portsmouth" target="_blank" rel="noopener noreferrer" class="trust-badge">
-            <img src="images/trustatrader.png" alt="TrustATrader Verified" decoding="async" loading="lazy">
-            <p class="trust-badge-label">TrustATrader Members</p>
-            <span class="trust-badge-btn">View Our Profile ›</span>
-          </a>
-          <a href="https://g.page/r/Cda-r7HFwhqHEAE/review" target="_blank" rel="noopener noreferrer" class="trust-badge">
-            <img src="images/Google-Reviews.png" alt="Google Reviews" decoding="async" loading="lazy">
-            <p class="trust-badge-label">Google Reviews</p>
-            <span class="trust-badge-btn">Leave Us a Review ›</span>
+          <a href="https://www.google.com/maps?cid=9735307698860179158" target="_blank" rel="noopener noreferrer" class="trust-badge">
+            <p class="trust-badge-brand" aria-hidden="true">Google</p>
+            <p class="trust-badge-label">Customer Reviews</p>
+            <span class="trust-badge-btn">Read Our Reviews ›</span>
           </a>
         </div>
       </div>
