@@ -317,6 +317,15 @@
         return;
       }
 
+      if (link.getAttribute("href").indexOf("mailto:") === 0) {
+        pushEvent("email_click", {
+          link_text: link.textContent.trim(),
+          link_url: link.href,
+          email_address: link.getAttribute("href").replace(/^mailto:/, "")
+        });
+        return;
+      }
+
       if (link.href.indexOf("wa.me") !== -1) {
         var match = link.href.match(/wa\.me\/([^?]+)/);
         pushEvent("whatsapp_click", {

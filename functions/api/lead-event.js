@@ -28,6 +28,7 @@ function allowedEventName(value) {
     "quote_cta_click",
     "phone_click",
     "whatsapp_click",
+    "email_click",
     "chat_open",
     "chat_question",
     "chat_lead",

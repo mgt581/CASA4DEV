@@ -46,6 +46,7 @@ test("all lead and chat journey events are accepted", async () => {
     "quote_cta_click",
     "phone_click",
     "whatsapp_click",
+    "email_click",
     "chat_open",
     "chat_question",
     "chat_lead",

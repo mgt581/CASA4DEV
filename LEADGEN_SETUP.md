@@ -45,6 +45,14 @@ Authorization: Bearer YOUR_LEADS_EXPORT_TOKEN
 
 Only share the export token with people who should be allowed to download lead data.
 
+You can also open the private dashboard with the same token:
+
+```text
+/dashboard.html?token=YOUR_LEADS_EXPORT_TOKEN
+```
+
+That dashboard shows recent leads, delivery status, top source clues and the main call / WhatsApp / email engagement events.
+
 ## Mailing List Consent
 
 Quote requests can be followed up as service enquiries. Marketing emails are separate.
@@ -76,6 +84,7 @@ The frontend pushes these events into `dataLayer` and `gtag` when available:
 - `quote_cta_click`
 - `phone_click`
 - `whatsapp_click`
+- `email_click`
 - `chat_open`
 - `chat_question`
 - `chat_lead`
