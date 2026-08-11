@@ -272,7 +272,7 @@
       <div>
         <p class="eyebrow">Private lead dashboard</p>
         <h1>Casa4 Developments — Lead Tracking</h1>
-        <p class="subtle">A simple live view of lead volume, source clues, delivery status and recent enquiry activity. Use the same token as the CSV export: add <span class="mono">?token=YOUR_LEADS_EXPORT_TOKEN</span> to this page.</p>
+        <p class="subtle">A simple live view of lead volume, source clues, delivery status and recent enquiry activity. Admin access is handled securely by Cloudflare Access.</p>
       </div>
       <div class="actions">
         <a class="button" id="exportLeads" href="#">Download leads CSV</a>
@@ -402,8 +402,6 @@
 
   <script>
     (function () {
-      var params = new URLSearchParams(window.location.search);
-      var token = params.get("token") || "";
       var statusNotice = document.getElementById("notice");
       var sections = document.getElementById("sections");
 
@@ -470,17 +468,10 @@
         }
       }
 
-      document.getElementById("exportLeads").href = "/api/leads/export" + (token ? "?token=" + encodeURIComponent(token) : "");
-      document.getElementById("exportEvents").href = "/api/lead-events/export" + (token ? "?token=" + encodeURIComponent(token) : "");
+      document.getElementById("exportLeads").href = "/api/leads/export";
+      document.getElementById("exportEvents").href = "/api/lead-events/export";
 
-      if (!token) {
-        statusNotice.style.display = "block";
-        statusNotice.textContent = "Add a token to the URL to unlock the dashboard, for example: /dashboard.html?token=YOUR_LEADS_EXPORT_TOKEN";
-        sections.style.display = "none";
-        return;
-      }
-
-      fetch("/api/dashboard?token=" + encodeURIComponent(token), {
+      fetch("/api/dashboard", {
         headers: { accept: "application/json" }
       })
         .then(function (response) {
@@ -580,7 +571,7 @@
         })
         .catch(function (error) {
           statusNotice.style.display = "block";
-          statusNotice.textContent = error && error.message ? error.message : "Could not load the dashboard.";
+          statusNotice.textContent = error && error.message ? error.message : "Sign in with your admin account to view the private dashboard.";
           sections.style.display = "none";
         });
     })();

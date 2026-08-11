@@ -102,6 +102,27 @@ test("dashboard api returns a safe summary for an authorized token", async () =>
   assert.equal(result.recent_leads.length, 1);
 });
 
+test("dashboard api returns a safe summary for an authorized access request", async () => {
+  const response = await dashboardApi.onRequestGet({
+    env: {
+      LEADS_EXPORT_TOKEN: "secret-token",
+      LEADS_DB: dashboardDb()
+    },
+    request: new Request("https://example.test/api/dashboard", {
+      headers: {
+        "cf-access-jwt-assertion": "fake-jwt"
+      }
+    })
+  });
+
+  const result = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(result.ok, true);
+  assert.equal(result.totals.leads, 5);
+  assert.equal(result.recent_leads.length, 1);
+});
+
 test("dashboard api refuses missing or invalid access tokens", async () => {
   const missing = await dashboardApi.onRequestGet({
     env: {
@@ -124,13 +145,14 @@ test("dashboard api refuses missing or invalid access tokens", async () => {
   assert.equal(invalid.status, 401);
 });
 
-test("dashboard page is private and token based", async () => {
+test("dashboard page is private and Access aware", async () => {
   const html = await readFile(new URL("../dashboard.html", import.meta.url), "utf8");
 
   assert.match(html, /noindex,nofollow/i);
-  assert.match(html, /token=YOUR_LEADS_EXPORT_TOKEN/i);
+  assert.doesNotMatch(html, /token=YOUR_LEADS_EXPORT_TOKEN/i);
   assert.match(html, /Download leads CSV/i);
   assert.match(html, /Lead Tracking/i);
+  assert.match(html, /Cloudflare Access/i);
 });
 
 test("public pages do not expose the private dashboard link", async () => {

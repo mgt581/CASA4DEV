@@ -50,12 +50,27 @@ async function queryAll(db, sql) {
   return result.results || [];
 }
 
-function requireToken(context) {
+function hasAccessAuth(request) {
+  var headers = request.headers;
+  var accessJwt = clean(headers.get("cf-access-jwt-assertion"));
+  if (accessJwt) return true;
+
+  var cookieHeader = clean(headers.get("cookie")).toLowerCase();
+  if (cookieHeader.indexOf("cf_authorization=") !== -1) return true;
+
+  return false;
+}
+
+function requireDashboardAccess(context) {
   var env = context.env || {};
   var configured = clean(env.LEADS_EXPORT_TOKEN);
   var authHeader = clean(context.request.headers.get("authorization"));
   var bearerToken = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
   var requestToken = bearerToken || clean(new URL(context.request.url).searchParams.get("token"));
+
+  if (hasAccessAuth(context.request)) {
+    return { ok: true, mode: "access" };
+  }
 
   if (!configured) {
     return { ok: false, status: 503, error: "Dashboard access is not configured." };
@@ -65,12 +80,12 @@ function requireToken(context) {
     return { ok: false, status: 401, error: "Unauthorized." };
   }
 
-  return { ok: true };
+  return { ok: true, mode: "token" };
 }
 
 export async function onRequestGet(context) {
   try {
-    var access = requireToken(context);
+    var access = requireDashboardAccess(context);
     if (!access.ok) {
       return textResponse(access.error, access.status);
     }
