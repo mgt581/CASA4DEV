@@ -225,7 +225,7 @@ Descriptions:
 
 ```text
 Request a free quote for block paving driveways across Fareham, Portsmouth and Hampshire.
-Durable driveway paving, clear advice and 0% finance options from Casa4 Developments.
+Durable driveway paving and clear advice from Casa4 Developments.
 ```
 
 ### Patio Headlines

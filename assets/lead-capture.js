@@ -543,7 +543,7 @@
       messages.parentNode.scrollTop = messages.parentNode.scrollHeight;
     }
 
-    messages.appendChild(chatMessage("Hi, I can help with services, areas, finance and free quote requests. For anything detailed, send it to a human advisor.", "bot"));
+    messages.appendChild(chatMessage("Hi, I can help with services, areas, free quote requests. For anything detailed, send it to a human advisor.", "bot"));
     options.appendChild(createOption("Get a free quote", function () {
       answer("Get a free quote", "No problem. Send your details and a human advisor can follow up about the project.", true);
     }));
@@ -553,8 +553,8 @@
     options.appendChild(createOption("What services do you do?", function () {
       answer("What services do you do?", "Main services include driveways, block paving, patios, porcelain surfaces, landscaping, outdoor kitchens, fencing, decking, pergolas, kitchens, bathrooms and extensions.", false);
     }));
-    options.appendChild(createOption("Finance options", function () {
-      answer("Finance options", "The site advertises 0% finance options. A human advisor can confirm what is available for your project and quote size.", true);
+    options.appendChild(createOption("Other questions", function () {
+      answer("Other questions", "A human advisor can help with project questions and quote sizes.", true);
     }));
     options.appendChild(createOption("Wait for a human advisor", function () {
       answer("Wait for a human advisor", "Sure. Leave your contact details and what you need help with.", true);
