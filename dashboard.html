@@ -447,6 +447,29 @@
         return text.slice(0, limit - 1) + "…";
       }
 
+      function originLabel(item) {
+        var utmSource = String(item && item.utm_source ? item.utm_source : "").trim().toLowerCase();
+        if (utmSource) return utmSource;
+
+        var referrer = String(item && item.referrer ? item.referrer : "").trim();
+        if (!referrer) return String(item && item.source ? item.source : "direct / unknown");
+
+        try {
+          var host = new URL(referrer).hostname.toLowerCase();
+          if (host.indexOf("facebook.com") !== -1 || host.indexOf("fb.com") !== -1) return "facebook";
+          if (host.indexOf("instagram.com") !== -1) return "instagram";
+          if (host.indexOf("google.") !== -1 || host.indexOf("google.com") !== -1 || host.indexOf("g.co") !== -1) return "google";
+          if (host.indexOf("bing.com") !== -1) return "bing";
+          if (host.indexOf("linkedin.com") !== -1) return "linkedin";
+          if (host.indexOf("twitter.com") !== -1 || host.indexOf("x.com") !== -1) return "x / twitter";
+          if (host.indexOf("whatsapp.com") !== -1 || host.indexOf("wa.me") !== -1) return "whatsapp";
+          if (host.indexOf("youtube.com") !== -1 || host.indexOf("youtu.be") !== -1) return "youtube";
+          return host;
+        } catch (error) {
+          return referrer;
+        }
+      }
+
       document.getElementById("exportLeads").href = "/api/leads/export" + (token ? "?token=" + encodeURIComponent(token) : "");
       document.getElementById("exportEvents").href = "/api/lead-events/export" + (token ? "?token=" + encodeURIComponent(token) : "");
 
@@ -528,7 +551,7 @@
           });
 
           setTable("leadBody", data.recent_leads || [], function (item) {
-            var origin = item.utm_source || item.referrer || item.source || "direct / unknown";
+            var origin = originLabel(item);
             return [
               "<tr>",
               "<td>" + esc(formatTime(item.submitted_at)) + "</td>",
