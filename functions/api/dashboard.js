@@ -28,6 +28,23 @@ function countValue(rows, key) {
   return Number(value || 0);
 }
 
+function normalizedOriginSql(columnName) {
+  return [
+    "CASE",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND LOWER(" + columnName + ") LIKE '%facebook.com%' THEN 'facebook'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND LOWER(" + columnName + ") LIKE '%fb.com%' THEN 'facebook'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND LOWER(" + columnName + ") LIKE '%instagram.com%' THEN 'instagram'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND (LOWER(" + columnName + ") LIKE '%google.%' OR LOWER(" + columnName + ") LIKE '%google.com%' OR LOWER(" + columnName + ") LIKE '%g.co%') THEN 'google'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND LOWER(" + columnName + ") LIKE '%bing.com%' THEN 'bing'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND LOWER(" + columnName + ") LIKE '%linkedin.com%' THEN 'linkedin'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND (LOWER(" + columnName + ") LIKE '%twitter.com%' OR LOWER(" + columnName + ") LIKE '%x.com%') THEN 'x / twitter'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND (LOWER(" + columnName + ") LIKE '%whatsapp.com%' OR LOWER(" + columnName + ") LIKE '%wa.me%') THEN 'whatsapp'",
+    "  WHEN COALESCE(NULLIF(" + columnName + ", ''), '') <> '' AND (LOWER(" + columnName + ") LIKE '%youtube.com%' OR LOWER(" + columnName + ") LIKE '%youtu.be%') THEN 'youtube'",
+    "  ELSE " + columnName,
+    "END"
+  ].join("\n");
+}
+
 async function queryAll(db, sql) {
   var result = await db.prepare(sql).all();
   return result.results || [];
@@ -84,16 +101,16 @@ export async function onRequestGet(context) {
       env.LEADS_DB,
       `SELECT
         CASE
-          WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN utm_source
-          WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN referrer
+          WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN LOWER(utm_source)
+          WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN ${normalizedOriginSql("referrer")}
           ELSE 'direct / unknown'
         END AS origin,
         COUNT(*) AS count
       FROM leads
       GROUP BY
         CASE
-          WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN utm_source
-          WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN referrer
+          WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN LOWER(utm_source)
+          WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN ${normalizedOriginSql("referrer")}
           ELSE 'direct / unknown'
         END
       ORDER BY count DESC, origin ASC
