@@ -8,6 +8,8 @@ async function importSource(relativePath) {
 }
 
 const dashboardApi = await importSource("../functions/api/dashboard.js");
+const leadsExportApi = await importSource("../functions/api/leads/export.js");
+const leadEventsExportApi = await importSource("../functions/api/lead-events/export.js");
 
 function dashboardDb() {
   return {
@@ -142,6 +144,60 @@ test("dashboard api refuses missing or invalid access tokens", async () => {
     request: new Request("https://example.test/api/dashboard?token=wrong")
   });
 
+  assert.equal(invalid.status, 401);
+});
+
+test("lead exports allow Access-authenticated requests", async () => {
+  const leadsResponse = await leadsExportApi.onRequestGet({
+    env: {
+      LEADS_EXPORT_TOKEN: "secret-token",
+      LEADS_DB: dashboardDb()
+    },
+    request: new Request("https://example.test/api/leads/export", {
+      headers: {
+        "cf-access-jwt-assertion": "fake-jwt"
+      }
+    })
+  });
+
+  const leadsText = await leadsResponse.text();
+  assert.equal(leadsResponse.status, 200);
+  assert.match(leadsText, /submitted_at,name,phone,email,postcode,service,timeframe,message,page,source/i);
+
+  const eventsResponse = await leadEventsExportApi.onRequestGet({
+    env: {
+      LEADS_EXPORT_TOKEN: "secret-token",
+      LEADS_DB: dashboardDb()
+    },
+    request: new Request("https://example.test/api/lead-events/export", {
+      headers: {
+        "cf-access-jwt-assertion": "fake-jwt"
+      }
+    })
+  });
+
+  const eventsText = await eventsResponse.text();
+  assert.equal(eventsResponse.status, 200);
+  assert.match(eventsText, /occurred_at,event_name,page,landing_page,referrer,source/i);
+});
+
+test("lead exports refuse missing or invalid access tokens", async () => {
+  const missing = await leadsExportApi.onRequestGet({
+    env: {
+      LEADS_EXPORT_TOKEN: "secret-token",
+      LEADS_DB: dashboardDb()
+    },
+    request: new Request("https://example.test/api/leads/export")
+  });
+  assert.equal(missing.status, 401);
+
+  const invalid = await leadEventsExportApi.onRequestGet({
+    env: {
+      LEADS_EXPORT_TOKEN: "secret-token",
+      LEADS_DB: dashboardDb()
+    },
+    request: new Request("https://example.test/api/lead-events/export?token=wrong")
+  });
   assert.equal(invalid.status, 401);
 });
 

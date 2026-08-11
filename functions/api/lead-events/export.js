@@ -2,6 +2,17 @@ function clean(value) {
   return String(value || "").trim();
 }
 
+function hasAccessAuth(request) {
+  var headers = request.headers;
+  var accessJwt = clean(headers.get("cf-access-jwt-assertion"));
+  if (accessJwt) return true;
+
+  var cookieHeader = clean(headers.get("cookie")).toLowerCase();
+  if (cookieHeader.indexOf("cf_authorization=") !== -1) return true;
+
+  return false;
+}
+
 function textResponse(body, status) {
   return new Response(body, {
     status,
@@ -66,6 +77,10 @@ export async function onRequestGet(context) {
   var authHeader = clean(context.request.headers.get("authorization"));
   var bearerToken = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
   var requestToken = bearerToken || clean(new URL(context.request.url).searchParams.get("token"));
+
+  if (hasAccessAuth(context.request)) {
+    requestToken = token;
+  }
 
   if (!token) {
     return textResponse("Lead event export is not configured.", 503);
