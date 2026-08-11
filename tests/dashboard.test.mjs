@@ -132,3 +132,11 @@ test("dashboard page is private and token based", async () => {
   assert.match(html, /Download leads CSV/i);
   assert.match(html, /Lead Tracking/i);
 });
+
+test("public pages do not expose the private dashboard link", async () => {
+  const indexHtml = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const contactHtml = await readFile(new URL("../contact.html", import.meta.url), "utf8");
+
+  assert.doesNotMatch(indexHtml, /href="dashboard\.html"/i);
+  assert.doesNotMatch(contactHtml, /href="dashboard\.html"/i);
+});
