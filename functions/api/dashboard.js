@@ -50,7 +50,102 @@ async function queryAll(db, sql) {
   return result.results || [];
 }
 
-function hasAccessAuth(request) {
+async function ensurePipelineColumns(db) {
+  var result = await db.prepare("PRAGMA table_info(leads)").all();
+  var columns = new Set((result.results || []).map(function(item) { return item.name; }));
+  var additions = [
+    ["lead_status", "TEXT NOT NULL DEFAULT 'NEW'"],
+    ["quote_value_pence", "INTEGER NOT NULL DEFAULT 0"],
+    ["won_revenue_pence", "INTEGER NOT NULL DEFAULT 0"],
+    ["status_updated_at", "TEXT"]
+  ];
+
+  for (var index = 0; index < additions.length; index += 1) {
+    if (!columns.has(additions[index][0])) {
+      await db.prepare("ALTER TABLE leads ADD COLUMN " + additions[index][0] + " " + additions[index][1]).run();
+    }
+  }
+}
+async function ensureDashboardSchema(db) {
+  await db.prepare(
+    `CREATE TABLE IF NOT EXISTS leads (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      submitted_at TEXT NOT NULL,
+      name TEXT NOT NULL,
+      phone TEXT,
+      email TEXT,
+      postcode TEXT,
+      service TEXT,
+      timeframe TEXT,
+      message TEXT,
+      page TEXT,
+      source TEXT,
+      marketing_consent INTEGER NOT NULL DEFAULT 0,
+      delivery_status TEXT NOT NULL DEFAULT 'pending',
+      delivery_errors TEXT,
+      lead_status TEXT NOT NULL DEFAULT 'NEW',
+      quote_value_pence INTEGER NOT NULL DEFAULT 0,
+      won_revenue_pence INTEGER NOT NULL DEFAULT 0,
+      status_updated_at TEXT,
+      user_agent TEXT,
+      ip_hash TEXT,
+      landing_page TEXT,
+      referrer TEXT,
+      utm_source TEXT,
+      utm_medium TEXT,
+      utm_campaign TEXT,
+      utm_term TEXT,
+      utm_content TEXT,
+      gclid TEXT,
+      fbclid TEXT,
+      msclkid TEXT,
+      session_id TEXT,
+      client_id TEXT,
+      form_name TEXT,
+      property_size TEXT,
+      booking_id TEXT
+    )`
+  ).run();
+  await ensurePipelineColumns(db);
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_leads_submitted_at ON leads (submitted_at DESC)").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_leads_source ON leads (source)").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads (lead_status)").run();
+
+  await db.prepare(
+    `CREATE TABLE IF NOT EXISTS lead_events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      occurred_at TEXT NOT NULL,
+      event_name TEXT NOT NULL,
+      page TEXT,
+      landing_page TEXT,
+      referrer TEXT,
+      source TEXT,
+      medium TEXT,
+      campaign TEXT,
+      term TEXT,
+      content TEXT,
+      gclid TEXT,
+      fbclid TEXT,
+      msclkid TEXT,
+      service TEXT,
+      link_url TEXT,
+      link_text TEXT,
+      phone_number TEXT,
+      whatsapp_number TEXT,
+      session_id TEXT,
+      client_id TEXT,
+      user_agent TEXT,
+      ip_hash TEXT
+    )`
+  ).run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_lead_events_occurred_at ON lead_events (occurred_at DESC)").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_lead_events_event_name ON lead_events (event_name)").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_lead_events_session_id ON lead_events (session_id)").run();
+}
+
+function hasConfiguredAccessAuth(request, env) {
+  if (clean(env.CLOUDFLARE_ACCESS_ENABLED).toLowerCase() !== "true") return false;
+
   var headers = request.headers;
   var accessJwt = clean(headers.get("cf-access-jwt-assertion"));
   if (accessJwt) return true;
@@ -66,9 +161,9 @@ function requireDashboardAccess(context) {
   var configured = clean(env.LEADS_EXPORT_TOKEN);
   var authHeader = clean(context.request.headers.get("authorization"));
   var bearerToken = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
-  var requestToken = bearerToken || clean(new URL(context.request.url).searchParams.get("token"));
+  var requestToken = bearerToken;
 
-  if (hasAccessAuth(context.request)) {
+  if (hasConfiguredAccessAuth(context.request, env)) {
     return { ok: true, mode: "access" };
   }
 
@@ -95,13 +190,26 @@ export async function onRequestGet(context) {
       return textResponse("Lead database is not configured.", 503);
     }
 
+    await ensureDashboardSchema(env.LEADS_DB);
+
     var totalsRows = await queryAll(
       env.LEADS_DB,
       `SELECT
         COUNT(*) AS total_leads,
         SUM(CASE WHEN delivery_status = 'delivered' THEN 1 ELSE 0 END) AS delivered_leads,
-        SUM(CASE WHEN delivery_status = 'failed' THEN 1 ELSE 0 END) AS failed_leads
+        SUM(CASE WHEN delivery_status = 'failed' THEN 1 ELSE 0 END) AS failed_leads,
+        SUM(CASE WHEN lead_status = 'WON' THEN 1 ELSE 0 END) AS won_leads,
+        SUM(quote_value_pence) AS quoted_value_pence,
+        SUM(won_revenue_pence) AS won_revenue_pence
       FROM leads`
+    );
+
+    var pipelineRows = await queryAll(
+      env.LEADS_DB,
+      `SELECT lead_status AS status, COUNT(*) AS count
+      FROM leads
+      GROUP BY lead_status
+      ORDER BY count DESC, lead_status ASC`
     );
 
     var eventTotalsRows = await queryAll(
@@ -117,7 +225,11 @@ export async function onRequestGet(context) {
       `SELECT
         CASE
           WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN LOWER(utm_source)
+          WHEN COALESCE(NULLIF(fbclid, ''), '') <> '' THEN 'facebook'
+          WHEN COALESCE(NULLIF(gclid, ''), '') <> '' THEN 'google'
+          WHEN COALESCE(NULLIF(msclkid, ''), '') <> '' THEN 'bing'
           WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN ${normalizedOriginSql("referrer")}
+          WHEN COALESCE(NULLIF(source, ''), '') <> '' AND LOWER(source) <> 'website' THEN LOWER(source)
           ELSE 'direct / unknown'
         END AS origin,
         COUNT(*) AS count
@@ -125,7 +237,11 @@ export async function onRequestGet(context) {
       GROUP BY
         CASE
           WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN LOWER(utm_source)
+          WHEN COALESCE(NULLIF(fbclid, ''), '') <> '' THEN 'facebook'
+          WHEN COALESCE(NULLIF(gclid, ''), '') <> '' THEN 'google'
+          WHEN COALESCE(NULLIF(msclkid, ''), '') <> '' THEN 'bing'
           WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN ${normalizedOriginSql("referrer")}
+          WHEN COALESCE(NULLIF(source, ''), '') <> '' AND LOWER(source) <> 'website' THEN LOWER(source)
           ELSE 'direct / unknown'
         END
       ORDER BY count DESC, origin ASC
@@ -140,6 +256,37 @@ export async function onRequestGet(context) {
       FROM leads
       GROUP BY COALESCE(NULLIF(service, ''), 'Website enquiry')
       ORDER BY count DESC, service ASC
+      LIMIT 10`
+    );
+
+    var revenueOriginRows = await queryAll(
+      env.LEADS_DB,
+      `SELECT
+        CASE
+          WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN LOWER(utm_source)
+          WHEN COALESCE(NULLIF(fbclid, ''), '') <> '' THEN 'facebook'
+          WHEN COALESCE(NULLIF(gclid, ''), '') <> '' THEN 'google'
+          WHEN COALESCE(NULLIF(msclkid, ''), '') <> '' THEN 'bing'
+          WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN ${normalizedOriginSql("referrer")}
+          WHEN COALESCE(NULLIF(source, ''), '') <> '' AND LOWER(source) <> 'website' THEN LOWER(source)
+          ELSE 'direct / unknown'
+        END AS origin,
+        COUNT(*) AS leads,
+        SUM(CASE WHEN lead_status = 'WON' THEN 1 ELSE 0 END) AS won_leads,
+        SUM(quote_value_pence) AS quote_value_pence,
+        SUM(won_revenue_pence) AS won_revenue_pence
+      FROM leads
+      GROUP BY
+        CASE
+          WHEN COALESCE(NULLIF(utm_source, ''), '') <> '' THEN LOWER(utm_source)
+          WHEN COALESCE(NULLIF(fbclid, ''), '') <> '' THEN 'facebook'
+          WHEN COALESCE(NULLIF(gclid, ''), '') <> '' THEN 'google'
+          WHEN COALESCE(NULLIF(msclkid, ''), '') <> '' THEN 'bing'
+          WHEN COALESCE(NULLIF(referrer, ''), '') <> '' THEN ${normalizedOriginSql("referrer")}
+          WHEN COALESCE(NULLIF(source, ''), '') <> '' AND LOWER(source) <> 'website' THEN LOWER(source)
+          ELSE 'direct / unknown'
+        END
+      ORDER BY won_revenue_pence DESC, leads DESC, origin ASC
       LIMIT 10`
     );
 
@@ -169,6 +316,7 @@ export async function onRequestGet(context) {
     var recentLeads = await queryAll(
       env.LEADS_DB,
       `SELECT
+        id,
         submitted_at,
         name,
         phone,
@@ -184,7 +332,11 @@ export async function onRequestGet(context) {
         utm_medium,
         utm_campaign,
         delivery_status,
-        delivery_errors
+        delivery_errors,
+        lead_status,
+        quote_value_pence,
+        won_revenue_pence,
+        status_updated_at
       FROM leads
       ORDER BY submitted_at DESC
       LIMIT 12`
@@ -219,10 +371,15 @@ export async function onRequestGet(context) {
       totals: {
         leads: countValue(totalsRows, "total_leads"),
         delivered_leads: countValue(totalsRows, "delivered_leads"),
-        failed_leads: countValue(totalsRows, "failed_leads")
+        failed_leads: countValue(totalsRows, "failed_leads"),
+        won_leads: countValue(totalsRows, "won_leads"),
+        quoted_value_pence: countValue(totalsRows, "quoted_value_pence"),
+        won_revenue_pence: countValue(totalsRows, "won_revenue_pence")
       },
       event_totals: recentEventsWithCount,
       origin_summary: originRows,
+      revenue_origin_summary: revenueOriginRows,
+      pipeline_summary: pipelineRows,
       service_summary: serviceRows,
       landing_page_summary: landingPageRows,
       daily_leads: dailyRows,

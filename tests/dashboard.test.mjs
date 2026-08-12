@@ -15,9 +15,23 @@ function dashboardDb() {
   return {
     prepare(sql) {
       return {
+        async run() {
+          return { success: true };
+        },
         async all() {
+          if (sql.includes("PRAGMA table_info(leads)")) {
+            return { results: [
+              { name: "lead_status" },
+              { name: "quote_value_pence" },
+              { name: "won_revenue_pence" },
+              { name: "status_updated_at" }
+            ] };
+          }
           if (sql.includes("COUNT(*) AS total_leads")) {
-            return { results: [{ total_leads: 5, delivered_leads: 4, failed_leads: 1 }] };
+            return { results: [{ total_leads: 5, delivered_leads: 4, failed_leads: 1, won_leads: 1, quoted_value_pence: 250000, won_revenue_pence: 200000 }] };
+          }
+          if (sql.includes("GROUP BY lead_status")) {
+            return { results: [{ status: "NEW", count: 4 }, { status: "WON", count: 1 }] };
           }
           if (sql.includes("GROUP BY event_name")) {
             return { results: [
@@ -89,9 +103,12 @@ test("dashboard api returns a safe summary for an authorized token", async () =>
   const response = await dashboardApi.onRequestGet({
     env: {
       LEADS_EXPORT_TOKEN: "secret-token",
+      CLOUDFLARE_ACCESS_ENABLED: "true",
       LEADS_DB: dashboardDb()
     },
-    request: new Request("https://example.test/api/dashboard?token=secret-token")
+    request: new Request("https://example.test/api/dashboard", {
+      headers: { authorization: "Bearer secret-token" }
+    })
   });
 
   const result = await response.json();
@@ -108,6 +125,7 @@ test("dashboard api returns a safe summary for an authorized access request", as
   const response = await dashboardApi.onRequestGet({
     env: {
       LEADS_EXPORT_TOKEN: "secret-token",
+      CLOUDFLARE_ACCESS_ENABLED: "true",
       LEADS_DB: dashboardDb()
     },
     request: new Request("https://example.test/api/dashboard", {
@@ -129,6 +147,7 @@ test("dashboard api refuses missing or invalid access tokens", async () => {
   const missing = await dashboardApi.onRequestGet({
     env: {
       LEADS_EXPORT_TOKEN: "secret-token",
+      CLOUDFLARE_ACCESS_ENABLED: "true",
       LEADS_DB: dashboardDb()
     },
     request: new Request("https://example.test/api/dashboard")
@@ -139,6 +158,7 @@ test("dashboard api refuses missing or invalid access tokens", async () => {
   const invalid = await dashboardApi.onRequestGet({
     env: {
       LEADS_EXPORT_TOKEN: "secret-token",
+      CLOUDFLARE_ACCESS_ENABLED: "true",
       LEADS_DB: dashboardDb()
     },
     request: new Request("https://example.test/api/dashboard?token=wrong")
@@ -151,6 +171,7 @@ test("lead exports allow Access-authenticated requests", async () => {
   const leadsResponse = await leadsExportApi.onRequestGet({
     env: {
       LEADS_EXPORT_TOKEN: "secret-token",
+      CLOUDFLARE_ACCESS_ENABLED: "true",
       LEADS_DB: dashboardDb()
     },
     request: new Request("https://example.test/api/leads/export", {
@@ -167,6 +188,7 @@ test("lead exports allow Access-authenticated requests", async () => {
   const eventsResponse = await leadEventsExportApi.onRequestGet({
     env: {
       LEADS_EXPORT_TOKEN: "secret-token",
+      CLOUDFLARE_ACCESS_ENABLED: "true",
       LEADS_DB: dashboardDb()
     },
     request: new Request("https://example.test/api/lead-events/export", {

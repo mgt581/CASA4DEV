@@ -13,6 +13,9 @@ function databaseCapture(rows) {
   return {
     prepare() {
       return {
+        async run() {
+          return { success: true };
+        },
         bind(...values) {
           return {
             async run() {
@@ -53,6 +56,7 @@ test("all lead and chat journey events are accepted", async () => {
     "chat_lead_error",
     "lead_form_submit_attempt",
     "lead_form_error",
+    "lead_delivery_failed",
     "generate_lead",
     "lead_thank_you_view"
   ];
@@ -64,6 +68,25 @@ test("all lead and chat journey events are accepted", async () => {
     assert.equal(rows.length, 1, `${eventName} should be stored once`);
     assert.equal(rows[0][1], eventName);
   }
+});
+
+test("plain-domain Facebook events keep Facebook attribution", async () => {
+  const rows = [];
+  const context = eventContext("page_view", rows);
+  context.request = new Request("https://example.test/api/lead-event", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      event_name: "page_view",
+      page: "https://example.test/",
+      referrer: "https://m.facebook.com/",
+      source: "website"
+    })
+  });
+
+  const response = await leadEventApi.onRequestPost(context);
+  assert.equal(response.status, 200);
+  assert.equal(rows[0][5], "facebook");
 });
 
 test("unknown events are rejected and not stored", async () => {
