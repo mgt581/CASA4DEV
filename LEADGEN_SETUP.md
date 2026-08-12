@@ -10,7 +10,7 @@ Set these in the `casa4dev` Cloudflare Pages project:
 - `LEAD_TO_EMAIL`: where quote requests should go. Set this to `casa4developments@outlook.com,ajbryantsleads@gmail.com` (multiple recipients are comma-separated).
 - `LEAD_FROM_EMAIL`: verified sender. Use a verified domain sender such as `Casa4 Developments <info@casa4developments.co.uk>` once the domain is verified.
 - `LEAD_WEBHOOK_URL`: optional CRM/Zapier/Make webhook. Use this instead of, or alongside, email delivery.
-- `LEADS_EXPORT_TOKEN`: secret token used to download a CSV export from `/api/leads/export?token=...`.
+- `LEADS_EXPORT_TOKEN`: secret admin fallback for CSV exports and private dashboard access.
 - `GTM_CONTAINER_ID`: optional Google Tag Manager container ID, for example `GTM-XXXXXXX`.
 - `GA_MEASUREMENT_ID`: optional GA4 measurement ID, for example `G-XXXXXXXXXX`.
 - `CLARITY_PROJECT_ID`: optional Microsoft Clarity project ID for heatmaps and session recordings.
@@ -31,27 +31,7 @@ migrations/0001_leads.sql
 
 Every valid quote request is stored in D1 whether email delivery succeeds or fails. The table stores enquiry details, source page, form source, delivery status, delivery errors, user agent, a hashed IP address, and whether the visitor opted into marketing.
 
-Download the latest 1,000 leads as CSV:
-
-```text
-/api/leads/export?token=YOUR_LEADS_EXPORT_TOKEN
-```
-
-You can also send the token as an Authorization header:
-
-```text
-Authorization: Bearer YOUR_LEADS_EXPORT_TOKEN
-```
-
-Only share the export token with people who should be allowed to download lead data.
-
-You can also open the private dashboard with the same token:
-
-```text
-/dashboard.html?token=YOUR_LEADS_EXPORT_TOKEN
-```
-
-That dashboard shows recent leads, delivery status, top source clues and the main call / WhatsApp / email engagement events.
+Download the latest 1,000 leads as CSV through the private admin route. The dashboard and exports are intended to be opened through Cloudflare Access, not a public token link. That dashboard shows recent leads, delivery status, top source clues and the main call / WhatsApp / email engagement events.
 
 ## Mailing List Consent
 

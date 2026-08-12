@@ -2,6 +2,19 @@ function clean(value) {
   return String(value || "").trim();
 }
 
+function hasConfiguredAccessAuth(request, env) {
+  if (clean(env.CLOUDFLARE_ACCESS_ENABLED).toLowerCase() !== "true") return false;
+
+  var headers = request.headers;
+  var accessJwt = clean(headers.get("cf-access-jwt-assertion"));
+  if (accessJwt) return true;
+
+  var cookieHeader = clean(headers.get("cookie")).toLowerCase();
+  if (cookieHeader.indexOf("cf_authorization=") !== -1) return true;
+
+  return false;
+}
+
 function textResponse(body, status) {
   return new Response(body, {
     status,
@@ -65,7 +78,11 @@ export async function onRequestGet(context) {
   var token = clean(env.LEADS_EXPORT_TOKEN);
   var authHeader = clean(context.request.headers.get("authorization"));
   var bearerToken = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
-  var requestToken = bearerToken || clean(new URL(context.request.url).searchParams.get("token"));
+  var requestToken = bearerToken;
+
+  if (hasConfiguredAccessAuth(context.request, env)) {
+    requestToken = token;
+  }
 
   if (!token) {
     return textResponse("Lead event export is not configured.", 503);

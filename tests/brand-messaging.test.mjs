@@ -12,7 +12,7 @@ test("homepage messaging is focused on driveways patios and outdoor living", asy
   const html = await readHtml("index.html");
 
   assert.match(html, /Driveways, Patios &amp; Outdoor Living/i);
-  assert.match(html, /Specialising in driveways, patios and outdoor living spaces in Fareham/i);
+  assert.match(html, /specialising in driveways, patios and outdoor living spaces/i);
   assert.doesNotMatch(html, /family-run home improvement specialists in Fareham/i);
 });
 

@@ -37,6 +37,40 @@ function cleanOptional(value) {
   return clean(value).slice(0, 1000);
 }
 
+function inferredLeadSource(payload) {
+  var utmSource = cleanOptional(payload.utm_source).toLowerCase();
+  var suppliedSource = cleanOptional(payload.source).toLowerCase();
+  var referrer = cleanOptional(payload.referrer).toLowerCase();
+
+  if (utmSource) return utmSource;
+  if (payload.fbclid || referrer.indexOf("facebook.com") !== -1 || referrer.indexOf("fb.com") !== -1) return "facebook";
+  if (referrer.indexOf("instagram.com") !== -1) return "instagram";
+  if (payload.gclid || referrer.indexOf("google.") !== -1 || referrer.indexOf("g.co") !== -1) return "google";
+  if (payload.msclkid || referrer.indexOf("bing.com") !== -1) return "bing";
+  if (referrer.indexOf("linkedin.com") !== -1) return "linkedin";
+  if (referrer.indexOf("twitter.com") !== -1 || referrer.indexOf("x.com") !== -1) return "x / twitter";
+  if (referrer.indexOf("whatsapp.com") !== -1 || referrer.indexOf("wa.me") !== -1) return "whatsapp";
+  if (suppliedSource && suppliedSource !== "website") return suppliedSource;
+  return "direct / unknown";
+}
+
+async function ensurePipelineColumns(db) {
+  var result = await db.prepare("PRAGMA table_info(leads)").all();
+  var columns = new Set((result.results || []).map(function(item) { return item.name; }));
+  var additions = [
+    ["lead_status", "TEXT NOT NULL DEFAULT 'NEW'"],
+    ["quote_value_pence", "INTEGER NOT NULL DEFAULT 0"],
+    ["won_revenue_pence", "INTEGER NOT NULL DEFAULT 0"],
+    ["status_updated_at", "TEXT"]
+  ];
+
+  for (var index = 0; index < additions.length; index += 1) {
+    if (!columns.has(additions[index][0])) {
+      await db.prepare("ALTER TABLE leads ADD COLUMN " + additions[index][0] + " " + additions[index][1]).run();
+    }
+  }
+}
+
 function buildEmailHtml(lead) {
   return `
     <h2>New Casa4 Developments quote request</h2>
@@ -96,6 +130,8 @@ async function hashIp(ip) {
 
 async function storeLead(env, request, lead, deliveryStatus, deliveryErrors) {
   if (!env.LEADS_DB) return false;
+
+  await ensurePipelineColumns(env.LEADS_DB);
 
   var ipHash = await hashIp(request.headers.get("cf-connecting-ip") || "");
   var userAgent = clean(request.headers.get("user-agent"));
@@ -250,7 +286,7 @@ export async function onRequestPost(context) {
       message: clean(payload.message),
       page: clean(payload.page),
       submittedAt: new Date().toISOString(),
-      source: clean(payload.source) || "website",
+      source: inferredLeadSource(payload),
       marketingConsent: consentValue(payload.marketing_consent),
       landingPage: cleanOptional(payload.landing_page),
       referrer: cleanOptional(payload.referrer),
